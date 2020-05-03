@@ -517,6 +517,10 @@ using BndryBATransformer = BATransformer;
 
 class MFIter;
 
+#ifdef AMREX_USE_HDF5
+class H5;
+#endif
+
 class BoxArray
 {
 public:
@@ -594,6 +598,11 @@ public:
 
     //! Output this BoxArray to a checkpoint file.
     std::ostream& writeOn (std::ostream&) const;
+
+#ifdef AMREX_USE_HDF5
+    void readFromHDF5 (H5& h5, const std::string &name);
+    void writeOnHDF5 (H5& h5, const std::string &name);
+#endif
 
     //! Are the BoxArrays equal?
     bool operator== (const BoxArray& rhs) const noexcept;
