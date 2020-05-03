@@ -761,6 +761,8 @@ ParticleContainer<NStructReal, NStructInt, NArrayReal, NArrayInt>
     for (int i = 0; i < ParallelDescriptor::NProcs(); i++) 
         total_mfi += all_mfi_cnt[i];
 
+    using ParallelDescriptor::Mpi_typemap;
+    
     // Create the int data 
     MPI_Allgather(&my_mfi_int_total_size, 1, Mpi_typemap<ULong>::type(), 
                   &(all_mfi_int_total_size[0]), 1, Mpi_typemap<ULong>::type(), ParallelDescriptor::Communicator());

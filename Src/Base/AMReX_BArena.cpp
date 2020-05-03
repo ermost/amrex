@@ -3,7 +3,7 @@
 void*
 amrex::BArena::alloc (std::size_t sz_)
 {
-    return std::malloc(sz_);
+    return std::aligned_alloc(64,sz_);
 }
 
 void

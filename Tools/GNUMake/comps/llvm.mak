@@ -35,10 +35,10 @@ ifeq ($(DEBUG),TRUE)
 
 else
 
-  CXXFLAGS += -g -O3
-  CFLAGS   += -g -O3
-  FFLAGS   += -g -O3
-  F90FLAGS += -g -O3
+  CXXFLAGS += -g -O3 -march=native
+  CFLAGS   += -g -O3 -march=native
+  FFLAGS   += -g -O3 -march=native
+  F90FLAGS += -g -O3 -march=native
 
 endif
 
@@ -47,14 +47,14 @@ endif
 ifdef CXXSTD
   CXXSTD := $(strip $(CXXSTD))
 else
-  CXXSTD := c++14
+  CXXSTD := c++17
 endif
 
-CXXFLAGS += -std=$(CXXSTD)
-CFLAGS   += -std=c99
+CXXFLAGS += -std=$(CXXSTD) -fPIE
+CFLAGS   += -std=c99 -fPIE
 
-FFLAGS   += -ffixed-line-length-none -fno-range-check -fno-second-underscore
-F90FLAGS += -ffree-line-length-none -fno-range-check -fno-second-underscore -fimplicit-none
+FFLAGS   += -ffixed-line-length-none -fno-range-check -fno-second-underscore -fPIE
+F90FLAGS += -ffree-line-length-none -fno-range-check -fno-second-underscore -fimplicit-none -fPIE
 
 FMODULES =  -J$(fmoddir) -I $(fmoddir)
 

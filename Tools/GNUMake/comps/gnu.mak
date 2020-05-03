@@ -100,8 +100,8 @@ ifeq ($(DEBUG),TRUE)
 
 else
 
-  CXXFLAGS += -g -O3
-  CFLAGS   += -g -O3
+  CXXFLAGS += -g -O3 -march=native
+  CFLAGS   += -g -O3 -march=native
 
 endif
 
@@ -137,6 +137,8 @@ else
     CXXFLAGS += -std=c++11
   else ifeq ($(gcc_major_version),5)
     CXXFLAGS += -std=c++14
+  else ifeq ($(gcc_major_version),9)
+    CXXFLAGS += -std=c++17
   endif
 endif
 
@@ -172,8 +174,8 @@ ifeq ($(DEBUG),TRUE)
 
 else
 
-  FFLAGS   += -g -O3
-  F90FLAGS += -g -O3
+  FFLAGS   += -g -O3 -march=native
+  F90FLAGS += -g -O3 -march=native
 
 endif
 

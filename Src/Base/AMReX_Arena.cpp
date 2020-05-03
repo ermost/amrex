@@ -98,7 +98,7 @@ Arena::allocate_system (std::size_t nbytes)
         }
     }
 #else
-    p = std::malloc(nbytes);
+    p = std::aligned_alloc(64,nbytes);
     if (p && arena_info.device_use_hostalloc) mlock(p, nbytes);
 #endif
     if (p == nullptr) amrex::Abort("Sorry, malloc failed");

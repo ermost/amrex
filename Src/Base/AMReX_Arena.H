@@ -102,7 +102,7 @@ protected:
     static const std::size_t align_size = sizeof(Word);
 #endif
 
-    static const std::size_t align_size = 16;
+    static const std::size_t align_size = 64;
 
     ArenaInfo arena_info;
 
