@@ -916,7 +916,7 @@ Amr::writePlotFile ()
   amrex::StreamRetry sretry(pltfile, abort_on_stream_retry_failure,
                              stream_max_tries);
 
-  output_name = pltfile + ".temp";
+  output_name = (AsyncOut::UseAsyncOut()) ? pltfile : (pltfile + ".temp");
 
   while(sretry.TryFileOutput()) {
     //
@@ -991,16 +991,19 @@ Amr::writePlotFile ()
 
 	amrex::Print() << "Write plotfile time = " << dPlotFileTime << "  seconds" << "\n\n";
     }
-    ParallelDescriptor::Barrier("Amr::writePlotFile::end");
 
-    if(ParallelDescriptor::IOProcessor()) {
-      std::rename(output_name.c_str(), pltfile.c_str());
+    if (AsyncOut::UseAsyncOut()) {
+        break;
+    } else {
+        ParallelDescriptor::Barrier("Amr::writePlotFile::end");
+        if(ParallelDescriptor::IOProcessor()) {
+            std::rename(output_name.c_str(), pltfile.c_str());
+        }
+        ParallelDescriptor::Barrier("Renaming temporary plotfile.");
+        //
+        // the plotfile file now has the regular name
+        //
     }
-    ParallelDescriptor::Barrier("Renaming temporary plotfile.");
-    //
-    // the plotfile file now has the regular name
-    //
-
   }  // end while
 
   VisMF::SetHeaderVersion(currentVersion);

@@ -358,7 +358,7 @@ public:
   std::string& getPlotType() {return plot_file_type;}
   std::string& getCheckType() {return check_file_type;}
 
-protected:
+public:
 
     //! Initialize grid hierarchy -- called by Amr::init.
     void initialInit (Real strt_time, Real stop_time,
