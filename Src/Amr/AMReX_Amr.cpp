@@ -600,9 +600,9 @@ Amr::fillStatePlotVarList ()
     const DescriptorList &desc_lst = AmrLevel::get_desc_lst();
     for (int typ(0); typ < desc_lst.size(); ++typ) {
         for (int comp(0); comp < desc_lst[typ].nComp(); ++comp) {
-            if (desc_lst[typ].getType() == IndexType::TheCellType()) {
+//            if (desc_lst[typ].getType() == IndexType::TheCellType()) {
                 state_plot_vars.push_back(desc_lst[typ].name(comp));
-	    }
+//	    }
 	}
     }
 }
@@ -876,12 +876,14 @@ Amr::writePlotFile ()
       return;
     }
 
+
 #ifdef AMREX_USE_HDF5
     if (plot_file_type == "HDF5") {
       writePlotFileHDF5();
       return;
     }
 #endif
+
 
     BL_PROFILE_REGION_START("Amr::writePlotFile()");
     BL_PROFILE("Amr::writePlotFile()");
@@ -896,10 +898,12 @@ Amr::writePlotFile ()
     }
 
     // Don't continue if we have no variables to plot.
+    //
 
     if (statePlotVars().size() == 0) {
       return;
     }
+
 
     Real dPlotFileTime0 = amrex::second();
 
