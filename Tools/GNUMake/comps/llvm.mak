@@ -35,10 +35,10 @@ ifeq ($(DEBUG),TRUE)
 
 else
 
-  CXXFLAGS += -g -O3 -march=native
-  CFLAGS   += -g -O3 -march=native
-  FFLAGS   += -g -O3 -march=native
-  F90FLAGS += -g -O3 -march=native
+  CXXFLAGS += -g -O3 -march=skylake-avx512 -mtune=skylake-avx512
+  CFLAGS   += -g -O3 -march=skylake-avx512 -mtune=skylake-avx512
+  FFLAGS   += -g -O3 -march=skylake-avx512 -mtune=skylake-avx512
+  F90FLAGS += -g -O3 -march=skylake-avx512 -mtune=skylake-avx512
 
 endif
 

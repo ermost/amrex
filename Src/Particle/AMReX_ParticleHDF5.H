@@ -643,6 +643,8 @@ ParticleContainer<NStructReal, NStructInt, NArrayReal, NArrayInt>
         my_mfi_cnt++;
     }
 
+    using ParallelDescriptor::Mpi_typemap;
+
     // Collect the number of mf and total size of mf from each rank
     MPI_Allgather(&my_mfi_cnt, 1, MPI_INT, &(all_mfi_cnt[0]), 1, MPI_INT, ParallelDescriptor::Communicator());
     for (int i = 0; i < ParallelDescriptor::NProcs(); i++) 

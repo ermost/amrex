@@ -342,8 +342,9 @@ AmrLevel::getPlotData(MultiFab&                 plot_data,
 
   for (int typ = 0; typ < desc_lst.size(); typ++) {
     for (int comp = 0; comp < desc_lst[typ].nComp(); comp++) {
-      if (parent->isStatePlotVar(desc_lst[typ].name(comp)) &&
-          desc_lst[typ].getType() == IndexType::TheCellType()) {
+      if (parent->isStatePlotVar(desc_lst[typ].name(comp)) 
+//	  && desc_lst[typ].getType() == IndexType::TheCellType()
+	  ) {
         plot_var_map.push_back(std::pair<int, int>(typ, comp));
         plot_names.push_back(desc_lst[typ].name(comp));
       }
@@ -371,7 +372,12 @@ AmrLevel::getPlotData(MultiFab&                 plot_data,
     int typ = plot_var_map[i].first;
     int comp = plot_var_map[i].second;
     this_dat = &state[typ].newData();
-    MultiFab::Copy(plot_data, *this_dat, comp, cnt, 1, nGrow);
+
+    if(desc_lst[typ].getType() == IndexType::TheCellType()){
+      MultiFab::Copy(plot_data, *this_dat, comp, cnt, 1, nGrow);
+    }else{
+      average_node_to_cellcenter(plot_data,cnt, *this_dat, comp, 1, nGrow);
+    }
     cnt++;
   }
 

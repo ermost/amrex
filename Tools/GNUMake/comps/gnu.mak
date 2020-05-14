@@ -139,6 +139,8 @@ else
     CXXFLAGS += -std=c++14
   else ifeq ($(gcc_major_version),9)
     CXXFLAGS += -std=c++17
+  else ifeq ($(gcc_major_version),10)
+    CXXFLAGS += -std=c++17
   endif
 endif
 
