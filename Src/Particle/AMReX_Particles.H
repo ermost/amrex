@@ -947,18 +947,16 @@ public:
     void WritePlotFile (const std::string& dir,
                         const std::string& name,
                         const Vector<int>& write_real_comp,
-                        const Vector<int>& write_int_comp,    
+                        const Vector<int>& write_int_comp,
                         const Vector<std::string>& real_comp_names,
                         const Vector<std::string>&  int_comp_names,
                         F&& f) const;
-	
+
     void WritePlotFilePre ();
 
     void WritePlotFilePost ();
 
     void WriteAsciiFile (const std::string& file);
-
-    void WriteCoarsenedAsciiFile (const std::string& filename);
 
     int Verbose () { return m_verbose; }
 
@@ -1020,10 +1018,6 @@ public:
 
     void AssignCellDensitySingleLevel (int rho_index, MultiFab& mf, int level,
                                        int ncomp=1, int particle_lvl_offset = 0) const;
-
-    void moveKick (MultiFab& acceleration, int level, Real timestep,
-		   Real a_new = 1.0, Real a_half = 1.0,
-		   int start_comp_for_accel = -1);
 
     IntVect Index (const Particle<NStructReal, NStructInt>& p, int lev) const;
 
