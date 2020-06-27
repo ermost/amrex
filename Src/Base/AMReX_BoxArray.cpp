@@ -10,9 +10,7 @@
 #include <AMReX_MemProfiler.H>
 #endif
 
-#ifdef _OPENMP
-#include <omp.h>
-#endif
+#include <AMReX_OpenMP.H>
 
 #ifdef AMREX_USE_HDF5
 #include <AMReX_HDF5.H>
@@ -1084,10 +1082,8 @@ BoxArray::minimalBox () const
 #pragma omp parallel
 #endif
 	    {
-#ifndef _OPENMP
-		int tid = 0;
-#else
-		int tid = omp_get_thread_num();
+                int tid = OpenMP::get_thread_num();
+#ifdef _OPENMP
 #pragma omp for
 #endif
 		for (int i = 0; i < N; ++i) {
@@ -1136,10 +1132,8 @@ BoxArray::minimalBox (Long& npts_avg_box) const
 #pragma omp parallel reduction(+:npts_tot)
 #endif
             {
-#ifndef _OPENMP
-                int tid = 0;
-#else
-                int tid = omp_get_thread_num();
+                int tid = OpenMP::get_thread_num();
+#ifdef _OPENMP
 #pragma omp for
 #endif
                 for (int i = 0; i < N; ++i) {
