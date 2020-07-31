@@ -57,12 +57,12 @@ AmrLevel::postCoarseTimeStep (Real time)
 }
 
 void
-AmrLevel::set_preferred_boundary_values (MultiFab& S,
-                                         int       state_index,
-                                         int       scomp,
-                                         int       dcomp,
-                                         int       ncomp,
-                                         Real      time) const
+AmrLevel::set_preferred_boundary_values (MultiFab& /*S*/,
+                                         int       /*state_index*/,
+                                         int       /*scomp*/,
+                                         int       /*dcomp*/,
+                                         int       /*ncomp*/,
+                                         Real      /*time*/) const
 {}
 
 DeriveList&
@@ -72,8 +72,8 @@ AmrLevel::get_derive_lst () noexcept
 }
 
 void
-AmrLevel::manual_tags_placement (TagBoxArray&    tags,
-                                 const Vector<IntVect>& bf_lev)
+AmrLevel::manual_tags_placement (TagBoxArray& /*tags*/,
+                                 const Vector<IntVect>& /*bf_lev*/)
 {}
 
 AmrLevel::AmrLevel () noexcept
@@ -530,15 +530,15 @@ void AmrLevel::writePlotHDF5Post() {}
 #endif
 
 void
-AmrLevel::writePlotFilePre (const std::string& dir,
-                            std::ostream&      os)
+AmrLevel::writePlotFilePre (const std::string& /*dir*/,
+                            std::ostream&      /*os*/)
 {
 }
 
 
 void
-AmrLevel::writePlotFilePost (const std::string& dir,
-                             std::ostream&      os)
+AmrLevel::writePlotFilePost (const std::string& /*dir*/,
+                             std::ostream&      /*os*/)
 {
 }
 
@@ -616,7 +616,7 @@ AmrLevel::restart (Amr&          papa,
 }
 
 void
-AmrLevel::set_state_in_checkpoint (Vector<int>& state_in_checkpoint)
+AmrLevel::set_state_in_checkpoint (Vector<int>& /*state_in_checkpoint*/)
 {
     amrex::Error("Class derived AmrLevel has to handle this!");
 }
@@ -855,8 +855,8 @@ void AmrLevel::restartHDF5 (Amr& papa, H5& h5)
 #endif
 
 void
-AmrLevel::checkPointPre (const std::string& dir,
-                         std::ostream&      os)
+AmrLevel::checkPointPre (const std::string& /*dir*/,
+                         std::ostream&      /*os*/)
 {
     BL_PROFILE("AmrLevel::checkPointPre()");
 
@@ -870,8 +870,8 @@ AmrLevel::checkPointPre (const std::string& dir,
 }
 
 void
-AmrLevel::checkPointPost (const std::string& dir,
-                          std::ostream&      os)
+AmrLevel::checkPointPost (const std::string& /*dir*/,
+                          std::ostream&      /*os*/)
 {
     BL_PROFILE("AmrLevel::checkPointPost()");
 #ifdef AMREX_USE_HDF5

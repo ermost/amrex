@@ -294,6 +294,22 @@ else
   USE_FORCE_INLINE := FALSE
 endif
 
+ifdef WARN_ALL
+  WARN_ALL := $(strip $(WARN_ALL))
+else
+ifeq ($(DEBUG),TRUE)
+  WARN_ALL := TRUE
+else
+  WARN_ALL := FALSE
+endif
+endif
+
+ifdef WARN_ERROR
+  WARN_ERROR := $(strip $(WARN_ERROR))
+else
+  WARN_ERROR := FALSE
+endif
+
 ifdef USE_GPU_PRAGMA
   USE_GPU_PRAGMA := $(strip $(USE_GPU_PRAGMA))
   GPU_PRAGMA_NO_HOST_VERSION ?= FALSE
@@ -316,6 +332,18 @@ ifdef FIX_NVCC_PTHREAD
   FIX_NVCC_PTHREAD := $(strip $(FIX_NVCC_PTHREAD))
 else
   FIX_NVCC_PTHREAD := FALSE
+endif
+
+ifdef GPU_WARN_CAPTURE_THIS
+  GPU_WARN_CAPTURE_THIS := $(strip $(GPU_WARN_CAPTURE_THIS))
+else
+  GPU_WARN_CAPTURE_THIS := TRUE
+endif
+
+ifdef GPU_ERROR_CAPTURE_THIS
+  GPU_ERROR_CAPTURE_THIS := $(strip $(GPU_ERROR_CAPTURE_THIS))
+else
+  GPU_ERROR_CAPTURE_THIS := TRUE
 endif
 
 SKIP_LINKING ?= FALSE
