@@ -3,15 +3,6 @@
 
 #if !defined(BL_LANG_FORT)
 
-// HIP FIX HERE - noexcept
-
-#ifdef AMREX_HIP_PLATFORM_HCC
-#define AMREX_NOEXCEPT
-#else
-#define AMREX_NOEXCEPT noexcept
-#endif
-
-
 // restrict
 
 #ifdef __cplusplus
@@ -127,7 +118,7 @@
 #endif
 
 // no inline
-#if defined(__GNUC__)
+#if defined(__GNUC__) || defined(__clang__) || defined(__CUDACC__) || defined(__HIP__) || defined(__SYCL_COMPILER_VERSION)
 #define AMREX_NO_INLINE __attribute__((noinline))
 #else
 #define AMREX_NO_INLINE
