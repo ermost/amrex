@@ -134,7 +134,7 @@ protected:
 
     std::unique_ptr<amrex::FluxRegister> flux_reg;
 
-    static constexpr int NUM_GROW = 2;
+    static constexpr int NUM_GROW = 3;
     enum StateVariable {
         Density = 0, Xmom, Ymom, Zmom, Eden, Eint, Temp,
         NUM_STATE

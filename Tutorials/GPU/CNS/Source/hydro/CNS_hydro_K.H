@@ -52,132 +52,193 @@ cns_flux_to_dudt (int i, int j, int k, int n,
         +           dxinv[2] * (fz(i,j,k,n) - fz(i,j,k+1,n));
 }
 
-namespace {
 
+template<typename T>
 AMREX_GPU_DEVICE AMREX_FORCE_INLINE
-amrex::Real limiter (amrex::Real dlft, amrex::Real drgt) noexcept
+constexpr T SQ(T const x) { return x * x; };
+
+
+
+template<bool plus_direction, typename T>
+AMREX_GPU_DEVICE AMREX_FORCE_INLINE
+T WENOZ(std::array<T, 5> const &WENOVAR) {
+
+        int constexpr minus2 = (plus_direction) ? 0 : 4;
+        int constexpr minus1 = (plus_direction) ? 1 : 3;
+        int constexpr plus0 = 2;
+        int constexpr plus1 = (plus_direction) ? 3 : 1;
+        int constexpr plus2 = (plus_direction) ? 4 : 0;
+
+
+//        const T dFD[3]{1. / 16., 10. / 16., 5. / 16.};
+
+        const T dFV[3]{1. / 10., 3. / 5., 3. / 10.};
+
+        T f[3];
+//       if constexpr (FD) {
+//           // Finite difference reconstruction
+//
+//           f[0] = 3. / 8. * WENOVAR[minus2] - 10. / 8. * WENOVAR[minus1] +
+//                  15. / 8. * WENOVAR[plus0];
+//           f[1] = -1. / 8. * WENOVAR[minus1] + 6. / 8. * WENOVAR[plus0] +
+//                  3. / 8. * WENOVAR[plus1];
+//           f[2] = 3. / 8. * WENOVAR[plus0] + 6. / 8. * WENOVAR[plus1] -
+//                  1. / 8. * WENOVAR[plus2];
+//       } else {
+            f[0] = 1. / 3. * WENOVAR[minus2] - 7. / 6. * WENOVAR[minus1] +
+                   11. / 6. * WENOVAR[plus0];
+            f[1] = -1. / 6. * WENOVAR[minus1] + 5. / 6. * WENOVAR[plus0] +
+                   1. / 3. * WENOVAR[plus1];
+            f[2] = 1. / 3. * WENOVAR[plus0] + 5. / 6. * WENOVAR[plus1] -
+                   1. / 6. * WENOVAR[plus2];
+//        }
+
+        // Smooth WENO weights: Note that these are from Del Zanna et al. 2007
+        // (A.18)
+	//
+	    
+	T beta[3];
+
+        const T beta_coeff[2]{13. / 12., 0.25};
+
+        beta[0] = beta_coeff[0] *
+                  SQ(WENOVAR[minus2] + WENOVAR[plus0] - 2.0 * WENOVAR[minus1]) +
+                  beta_coeff[1] * SQ(WENOVAR[minus2] - 4. * WENOVAR[minus1] +
+                                     3. * WENOVAR[plus0]);
+
+        beta[1] = beta_coeff[0] *
+                  SQ(WENOVAR[minus1] + WENOVAR[plus1] - 2.0 * WENOVAR[plus0]) +
+                  beta_coeff[1] * SQ(WENOVAR[minus1] - WENOVAR[plus1]);
+
+        beta[2] = beta_coeff[0] *
+                  SQ(WENOVAR[plus0] + WENOVAR[plus2] - 2.0 * WENOVAR[plus1]) +
+                  beta_coeff[1] * SQ(3. * WENOVAR[plus0] - 4. * WENOVAR[plus1] +
+                                     WENOVAR[plus2]);
+
+        // Rescale epsilon
+        //    constexpr double epsL = 1.e-42;
+        const T epsL = 1.e-42;
+
+        // WENO-Z+: Acker et al. 2016
+
+        const T tau_5 = amrex::Math::abs(beta[0] - beta[2]);
+
+        const T indicator[3]{(tau_5) / (beta[0] + epsL), (tau_5) / (beta[1] + epsL),
+                             (tau_5) / (beta[2] + epsL)};
+
+        T alpha[3]{1. + SQ(indicator[0]), 1. + SQ(indicator[1]),
+                   1. + SQ(indicator[2])};
+
+        T alpha_sum = 0.;
+//        if constexpr (FD) {
+//#pragma unroll
+//            for (int i = 0; i < 3; ++i) {
+//                alpha[i] *= dFD[i];
+//                alpha_sum += alpha[i];
+//            };
+//        } else { // FV
+
+#pragma unroll
+            for (int i = 0; i < 3; ++i) {
+                alpha[i] *= dFV[i];
+                alpha_sum += alpha[i];
+            };
+//        }
+
+        T flux = 0.;
+#pragma unroll
+        for (int i = 0; i < 3; ++i) {
+            flux += f[i] * alpha[i]; // / alpha_sum;
+        };
+
+        return flux / alpha_sum;
+    };
+
+
+
+AMREX_GPU_DEVICE
+inline
+void
+cns_wenoz_x (int i, int j, int k,
+             amrex::Array4<amrex::Real> const& dqL,
+             amrex::Array4<amrex::Real> const& dqR,
+             amrex::Array4<amrex::Real const> const& q) noexcept
 {
     using amrex::Real;
 
-    Real dcen = Real(0.5)*(dlft+drgt);
-    Real dsgn = amrex::Math::copysign(Real(1.0), dcen);
-    Real slop = Real(2.0) * amrex::min(amrex::Math::abs(dlft),amrex::Math::abs(drgt));
-    Real dlim = (dlft*drgt >= Real(0.0)) ? slop : Real(0.0);
-    return dsgn * amrex::min(dlim,amrex::Math::abs(dcen));
-}
+    for(int nn=0; nn< 5; ++nn){
 
+       std::array<Real,5> WENOVAR {{
+	       q(i-2,j,k,nn), 
+	       q(i-1,j,k,nn), 
+	       q(i-0,j,k,nn), 
+	       q(i+1,j,k,nn), 
+	       q(i+2,j,k,nn)
+       }};
+
+       dqR(i,j,k, nn) = WENOZ<false,Real>(WENOVAR);
+       dqL(i+1,j,k, nn) = WENOZ<true,Real>(WENOVAR);
+
+
+    };
 }
 
 AMREX_GPU_DEVICE
 inline
 void
-cns_slope_x (int i, int j, int k,
-             amrex::Array4<amrex::Real> const& dq,
+cns_wenoz_y (int i, int j, int k,
+             amrex::Array4<amrex::Real> const& dqL,
+             amrex::Array4<amrex::Real> const& dqR,
              amrex::Array4<amrex::Real const> const& q) noexcept
 {
     using amrex::Real;
 
-    Real dlft = Real(0.5)*(q(i,j,k,QPRES)-q(i-1,j,k,QPRES))/q(i,j,k,QCS) - Real(0.5)*q(i,j,k,QRHO)*(q(i,j,k,QU) - q(i-1,j,k,QU));
-    Real drgt = Real(0.5)*(q(i+1,j,k,QPRES)-q(i,j,k,QPRES))/q(i,j,k,QCS) - Real(0.5)*q(i,j,k,QRHO)*(q(i+1,j,k,QU) - q(i,j,k,QU));
-    Real d0 = limiter(dlft, drgt);
+    for(int nn=0; nn< 5; ++nn){
 
-    Real cs2 = q(i,j,k,QCS)*q(i,j,k,QCS);
-    dlft = (q(i,j,k,QRHO)-q(i-1,j,k,QRHO)) - (q(i,j,k,QPRES) - q(i-1,j,k,QPRES))/cs2;
-    drgt = (q(i+1,j,k,QRHO)-q(i,j,k,QRHO)) - (q(i+1,j,k,QPRES) - q(i,j,k,QPRES))/cs2;
-    Real d1 = limiter(dlft, drgt);
+       std::array<Real,5> WENOVAR {{
+	       q(i,j-2,k,nn), 
+	       q(i,j-1,k,nn), 
+	       q(i,j-0,k,nn), 
+	       q(i,j+1,k,nn), 
+	       q(i,j+2,k,nn)
+       }};
 
-    dlft = Real(0.5)*(q(i,j,k,QPRES)-q(i-1,j,k,QPRES))/q(i,j,k,QCS) + Real(0.5)*q(i,j,k,QRHO)*(q(i,j,k,QU) - q(i-1,j,k,QU));
-    drgt = Real(0.5)*(q(i+1,j,k,QPRES)-q(i,j,k,QPRES))/q(i,j,k,QCS) + Real(0.5)*q(i,j,k,QRHO)*(q(i+1,j,k,QU) - q(i,j,k,QU));
-    Real d2 = limiter(dlft, drgt);
+       dqR(i,j,k, nn) = WENOZ<false,Real>(WENOVAR);
+       dqL(i,j+1,k, nn) = WENOZ<true,Real>(WENOVAR);
 
-    dlft = q(i,j,k,QV) - q(i-1,j,k,QV);
-    drgt = q(i+1,j,k,QV) - q(i,j,k,QV);
-    Real d3 = limiter(dlft, drgt);
-
-    dlft = q(i,j,k,QW) - q(i-1,j,k,QW);
-    drgt = q(i+1,j,k,QW) - q(i,j,k,QW);
-    Real d4 = limiter(dlft, drgt);
-
-    dq(i,j,k,0) = d0;
-    dq(i,j,k,1) = d1;
-    dq(i,j,k,2) = d2;
-    dq(i,j,k,3) = d3;
-    dq(i,j,k,4) = d4;
+    };
 }
 
 AMREX_GPU_DEVICE
 inline
 void
-cns_slope_y (int i, int j, int k,
-             amrex::Array4<amrex::Real> const& dq,
+cns_wenoz_z (int i, int j, int k,
+             amrex::Array4<amrex::Real> const& dqL,
+             amrex::Array4<amrex::Real> const& dqR,
              amrex::Array4<amrex::Real const> const& q) noexcept
 {
     using amrex::Real;
 
-    Real dlft = Real(0.5)*(q(i,j,k,QPRES)-q(i,j-1,k,QPRES))/q(i,j,k,QCS) - Real(0.5)*q(i,j,k,QRHO)*(q(i,j,k,QV) - q(i,j-1,k,QV));
-    Real drgt = Real(0.5)*(q(i,j+1,k,QPRES)-q(i,j,k,QPRES))/q(i,j,k,QCS) - Real(0.5)*q(i,j,k,QRHO)*(q(i,j+1,k,QV) - q(i,j,k,QV));
-    Real d0 = limiter(dlft, drgt);
+    for(int nn=0; nn< 5; ++nn){
 
-    Real cs2 = q(i,j,k,QCS)*q(i,j,k,QCS);
-    dlft = (q(i,j,k,QRHO)-q(i,j-1,k,QRHO)) - (q(i,j,k,QPRES) - q(i,j-1,k,QPRES))/cs2;
-    drgt = (q(i,j+1,k,QRHO)-q(i,j,k,QRHO)) - (q(i,j+1,k,QPRES) - q(i,j,k,QPRES))/cs2;
-    Real d1 = limiter(dlft, drgt);
+       std::array<Real,5> WENOVAR {{
+	       q(i,j,k-2,nn), 
+	       q(i,j,k-1,nn), 
+	       q(i,j,k-0,nn), 
+	       q(i,j,k+1,nn), 
+	       q(i,j,k+2,nn)
+       }};
 
-    dlft = Real(0.5)*(q(i,j,k,QPRES)-q(i,j-1,k,QPRES))/q(i,j,k,QCS) + Real(0.5)*q(i,j,k,QRHO)*(q(i,j,k,QV) - q(i,j-1,k,QV));
-    drgt = Real(0.5)*(q(i,j+1,k,QPRES)-q(i,j,k,QPRES))/q(i,j,k,QCS) + Real(0.5)*q(i,j,k,QRHO)*(q(i,j+1,k,QV) - q(i,j,k,QV));
-    Real d2 = limiter(dlft, drgt);
-
-    dlft = q(i,j,k,QU) - q(i,j-1,k,QU);
-    drgt = q(i,j+1,k,QU) - q(i,j,k,QU);
-    Real d3 = limiter(dlft, drgt);
-
-    dlft = q(i,j,k,QW) - q(i,j-1,k,QW);
-    drgt = q(i,j+1,k,QW) - q(i,j,k,QW);
-    Real d4 = limiter(dlft, drgt);
-
-    dq(i,j,k,0) = d0;
-    dq(i,j,k,1) = d1;
-    dq(i,j,k,2) = d2;
-    dq(i,j,k,3) = d3;
-    dq(i,j,k,4) = d4;
+       dqR(i,j,k, nn) = WENOZ<false, Real>(WENOVAR);
+       dqL(i,j,k+1, nn) = WENOZ<true, Real>(WENOVAR);
+    };
 }
 
-AMREX_GPU_DEVICE
-inline
-void
-cns_slope_z (int i, int j, int k,
-             amrex::Array4<amrex::Real> const& dq,
-             amrex::Array4<amrex::Real const> const& q) noexcept
-{
-    using amrex::Real;
 
-    Real dlft = Real(0.5)*(q(i,j,k,QPRES)-q(i,j,k-1,QPRES))/q(i,j,k,QCS) - Real(0.5)*q(i,j,k,QRHO)*(q(i,j,k,QW) - q(i,j,k-1,QW));
-    Real drgt = Real(0.5)*(q(i,j,k+1,QPRES)-q(i,j,k,QPRES))/q(i,j,k,QCS) - Real(0.5)*q(i,j,k,QRHO)*(q(i,j,k+1,QW) - q(i,j,k,QW));
-    Real d0 = limiter(dlft, drgt);
 
-    Real cs2 = q(i,j,k,QCS)*q(i,j,k,QCS);
-    dlft = (q(i,j,k,QRHO)-q(i,j,k-1,QRHO)) - (q(i,j,k,QPRES) - q(i,j,k-1,QPRES))/cs2;
-    drgt = (q(i,j,k+1,QRHO)-q(i,j,k,QRHO)) - (q(i,j,k+1,QPRES) - q(i,j,k,QPRES))/cs2;
-    Real d1 = limiter(dlft, drgt);
 
-    dlft = Real(0.5)*(q(i,j,k,QPRES)-q(i,j,k-1,QPRES))/q(i,j,k,QCS) + Real(0.5)*q(i,j,k,QRHO)*(q(i,j,k,QW) - q(i,j,k-1,QW));
-    drgt = Real(0.5)*(q(i,j,k+1,QPRES)-q(i,j,k,QPRES))/q(i,j,k,QCS) + Real(0.5)*q(i,j,k,QRHO)*(q(i,j,k+1,QW) - q(i,j,k,QW));
-    Real d2 = limiter(dlft, drgt);
 
-    dlft = q(i,j,k,QU) - q(i,j,k-1,QU);
-    drgt = q(i,j,k+1,QU) - q(i,j,k,QU);
-    Real d3 = limiter(dlft, drgt);
 
-    dlft = q(i,j,k,QV) - q(i,j,k-1,QV);
-    drgt = q(i,j,k+1,QV) - q(i,j,k,QV);
-    Real d4 = limiter(dlft, drgt);
-
-    dq(i,j,k,0) = d0;
-    dq(i,j,k,1) = d1;
-    dq(i,j,k,2) = d2;
-    dq(i,j,k,3) = d3;
-    dq(i,j,k,4) = d4;
-}
 
 namespace {
 
@@ -319,29 +380,28 @@ inline
 void
 cns_riemann_x (int i, int j, int k,
                amrex::Array4<amrex::Real> const& fx,
-               amrex::Array4<amrex::Real const> const& dq,
+               amrex::Array4<amrex::Real const> const& dqL,
+               amrex::Array4<amrex::Real const> const& dqR,
                amrex::Array4<amrex::Real const> const& q,
                Parm const& parm) noexcept
 {
     using amrex::Real;
 
-    Real cspeed = q(i-1,j,k,QCS);
-    Real rl = q(i-1,j,k,QRHO) + Real(0.5) * ( (dq(i-1,j,k,0)+dq(i-1,j,k,2))/cspeed + dq(i-1,j,k,1));
+    Real rl = dqL(i,j,k,QRHO);
     rl = amrex::max(rl, parm.smallr);
-    Real ul = q(i-1,j,k,QU) + Real(0.5) * ( (dq(i-1,j,k,2)-dq(i-1,j,k,0))/q(i-1,j,k,QRHO));
-    Real pl = q(i-1,j,k,QPRES) + Real(0.5) *  (dq(i-1,j,k,0)+dq(i-1,j,k,2))*cspeed;
+    Real ul = dqL(i,j,k,QU);
+    Real pl = dqL(i,j,k,QPRES);
     pl = amrex::max(pl, parm.smallp);
-    Real ut1l = q(i-1,j,k,QV) + Real(0.5) * dq(i-1,j,k,3);
-    Real ut2l = q(i-1,j,k,QW) + Real(0.5) * dq(i-1,j,k,4);
+    Real ut1l = dqL(i,j,k,QV);
+    Real ut2l = dqL(i,j,k,QW);
 
-    cspeed = q(i,j,k,QCS);
-    Real rr = q(i,j,k,QRHO) - Real(0.5) * ( (dq(i,j,k,0)+dq(i,j,k,2))/cspeed + dq(i,j,k,1));
-    rr = amrex::max(rr, parm.smallr);
-    Real ur = q(i,j,k,QU) - Real(0.5) * ( (dq(i,j,k,2)-dq(i,j,k,0))/q(i,j,k,QRHO));
-    Real pr = q(i,j,k,QPRES) - Real(0.5) * (dq(i,j,k,0)+dq(i,j,k,2))*cspeed;
-    pr = amrex::max(pr, parm.smallp);
-    Real ut1r = q(i,j,k,QV) - Real(0.5) * dq(i,j,k,3);
-    Real ut2r = q(i,j,k,QW) - Real(0.5) * dq(i,j,k,4);
+    Real rr = dqR(i,j,k,QRHO);
+    rr = amrex::max(rl, parm.smallr);
+    Real ur = dqR(i,j,k,QU);
+    Real pr = dqR(i,j,k,QPRES);
+    pr = amrex::max(pl, parm.smallp);
+    Real ut1r = dqR(i,j,k,QV);
+    Real ut2r = dqR(i,j,k,QW);
 
     riemann(parm.eos_gamma, parm.smallp, parm.smallr,
             rl, ul, pl, ut1l, ut2l, rr, ur, pr, ut1r, ut2r,
@@ -353,29 +413,28 @@ inline
 void
 cns_riemann_y (int i, int j, int k,
                amrex::Array4<amrex::Real> const& fy,
-               amrex::Array4<amrex::Real const> const& dq,
+               amrex::Array4<amrex::Real const> const& dqL,
+               amrex::Array4<amrex::Real const> const& dqR,
                amrex::Array4<amrex::Real const> const& q,
                Parm const& parm) noexcept
 {
     using amrex::Real;
 
-    Real cspeed = q(i,j-1,k,QCS);
-    Real rl = q(i,j-1,k,QRHO) + Real(0.5) * ( (dq(i,j-1,k,0)+dq(i,j-1,k,2))/cspeed + dq(i,j-1,k,1));
+    Real rl = dqL(i,j,k,QRHO);
     rl = amrex::max(rl, parm.smallr);
-    Real ul = q(i,j-1,k,QV) + Real(0.5) * ( (dq(i,j-1,k,2)-dq(i,j-1,k,0))/q(i,j-1,k,QRHO));
-    Real pl = q(i,j-1,k,QPRES) + Real(0.5) *  (dq(i,j-1,k,0)+dq(i,j-1,k,2))*cspeed;
+    Real ul = dqL(i,j,k,QV);
+    Real pl = dqL(i,j,k,QPRES);
     pl = amrex::max(pl, parm.smallp);
-    Real ut1l = q(i,j-1,k,QU) + Real(0.5) * dq(i,j-1,k,3);
-    Real ut2l = q(i,j-1,k,QW) + Real(0.5) * dq(i,j-1,k,4);
+    Real ut1l = dqL(i,j,k,QU);
+    Real ut2l = dqL(i,j,k,QW);
 
-    cspeed = q(i,j,k,QCS);
-    Real rr = q(i,j,k,QRHO) - Real(0.5) * ( (dq(i,j,k,0)+dq(i,j,k,2))/cspeed + dq(i,j,k,1));
-    rr = amrex::max(rr, parm.smallr);
-    Real ur = q(i,j,k,QV) - Real(0.5) * ( (dq(i,j,k,2)-dq(i,j,k,0))/q(i,j,k,QRHO));
-    Real pr = q(i,j,k,QPRES) - Real(0.5) * (dq(i,j,k,0)+dq(i,j,k,2))*cspeed;
-    pr = amrex::max(pr, parm.smallp);
-    Real ut1r = q(i,j,k,QU) - Real(0.5) * dq(i,j,k,3);
-    Real ut2r = q(i,j,k,QW) - Real(0.5) * dq(i,j,k,4);
+    Real rr = dqR(i,j,k,QRHO);
+    rr = amrex::max(rl, parm.smallr);
+    Real ur = dqR(i,j,k,QV);
+    Real pr = dqR(i,j,k,QPRES);
+    pr = amrex::max(pl, parm.smallp);
+    Real ut1r = dqR(i,j,k,QU);
+    Real ut2r = dqR(i,j,k,QW);
 
     riemann(parm.eos_gamma, parm.smallp, parm.smallr,
             rl, ul, pl, ut1l, ut2l, rr, ur, pr, ut1r, ut2r,
@@ -387,29 +446,28 @@ inline
 void
 cns_riemann_z (int i, int j, int k,
                amrex::Array4<amrex::Real> const& fz,
-               amrex::Array4<amrex::Real const> const& dq,
+               amrex::Array4<amrex::Real const> const& dqL,
+               amrex::Array4<amrex::Real const> const& dqR,
                amrex::Array4<amrex::Real const> const& q,
                Parm const& parm) noexcept
 {
     using amrex::Real;
 
-    Real cspeed = q(i,j,k-1,QCS);
-    Real rl = q(i,j,k-1,QRHO) + Real(0.5) * ( (dq(i,j,k-1,0)+dq(i,j,k-1,2))/cspeed + dq(i,j,k-1,1));
+    Real rl = dqL(i,j,k,QRHO);
     rl = amrex::max(rl, parm.smallr);
-    Real ul = q(i,j,k-1,QW) + Real(0.5) * ( (dq(i,j,k-1,2)-dq(i,j,k-1,0))/q(i,j,k-1,QRHO));
-    Real pl = q(i,j,k-1,QPRES) + Real(0.5) *  (dq(i,j,k-1,0)+dq(i,j,k-1,2))*cspeed;
+    Real ul = dqL(i,j,k,QW);
+    Real pl = dqL(i,j,k,QPRES);
     pl = amrex::max(pl, parm.smallp);
-    Real ut1l = q(i,j,k-1,QU) + Real(0.5) * dq(i,j,k-1,3);
-    Real ut2l = q(i,j,k-1,QV) + Real(0.5) * dq(i,j,k-1,4);
+    Real ut1l = dqL(i,j,k,QU);
+    Real ut2l = dqL(i,j,k,QV);
 
-    cspeed = q(i,j,k,QCS);
-    Real rr = q(i,j,k,QRHO) - Real(0.5) * ( (dq(i,j,k,0)+dq(i,j,k,2))/cspeed + dq(i,j,k,1));
-    rr = amrex::max(rr, parm.smallr);
-    Real ur = q(i,j,k,QW) - Real(0.5) * ( (dq(i,j,k,2)-dq(i,j,k,0))/q(i,j,k,QRHO));
-    Real pr = q(i,j,k,QPRES) - Real(0.5) *  (dq(i,j,k,0)+dq(i,j,k,2))*cspeed;
-    pr = amrex::max(pr, parm.smallp);
-    Real ut1r = q(i,j,k,QU) - Real(0.5) * dq(i,j,k,3);
-    Real ut2r = q(i,j,k,QV) - Real(0.5) * dq(i,j,k,4);
+    Real rr = dqR(i,j,k,QRHO);
+    rr = amrex::max(rl, parm.smallr);
+    Real ur = dqR(i,j,k,QW);
+    Real pr = dqR(i,j,k,QPRES);
+    pr = amrex::max(pl, parm.smallp);
+    Real ut1r = dqR(i,j,k,QU);
+    Real ut2r = dqR(i,j,k,QV);
 
     riemann(parm.eos_gamma, parm.smallp, parm.smallr,
             rl, ul, pl, ut1l, ut2l, rr, ur, pr, ut1r, ut2r,

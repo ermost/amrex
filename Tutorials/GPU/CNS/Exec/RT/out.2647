@@ -1,0 +1,620 @@
+[dgx0182:34113] MCW rank 0 is not bound (or bound to all available processors)
+Collecting data...
+Initializing CUDA...
+CUDA initialized with 1 GPU per MPI rank; 1 GPU(s) used in total
+MPI initialized with 1 MPI processes
+MPI initialized with thread support level 0
+AMReX (20.09-45-g50e3994bb3cb) initialized
+Successfully read inputs file ... 
+Successfully read inputs file ... 
+Starting to call amrex_probinit ... 
+Successfully run amrex_probinit
+Now regridding at level lbase = 0
+grid_places() time: 0.01830019 new finest: 1
+STEP = 0 TIME = 0 : REGRID  with lbase = 0
+  Level 1   16 grids  4194304 cells  12.5 % of domain
+            smallest grid: 64 x 64 x 64  biggest grid: 64 x 64 x 64
+
+INITIAL GRIDS 
+  Level 0   16 grids  4194304 cells  100 % of domain
+            smallest grid: 64 x 64 x 64  biggest grid: 64 x 64 x 64
+  Level 1   16 grids  4194304 cells  12.5 % of domain
+            smallest grid: 64 x 64 x 64  biggest grid: 64 x 64 x 64
+
+PLOTFILE: file = plt00000
+grid_places() time: 0.007924044 new finest: 1
+
+[CNS] Total mass       is 1302338.0233411873
+      Total x-momentum is 0
+      Total y-momentum is 0
+      Total z-momentum is 0
+      Total energy     is 7176192.0007177163
+Write plotfile time = 0.791881559  seconds
+
+[Level 0 step 1] ADVANCE with dt = 0.0002870776155
+[Level 0 step 1] Advanced 4194304 cells
+[Level 1 step 1] ADVANCE with dt = 0.0001435388078
+[Level 1 step 1] Advanced 4194304 cells
+[Level 1 step 2] ADVANCE with dt = 0.0001435388078
+[Level 1 step 2] Advanced 4194304 cells
+
+STEP = 1 TIME = 0.0002870776155 DT = 0.0002870776155
+
+
+[CNS] Total mass       is 1302338.0233411905
+      Total x-momentum is -4.795694486619962e-20
+      Total y-momentum is 6.7762635780344027e-20
+      Total z-momentum is 1.0569463681968461
+      Total energy     is 7176192.0005831765
+
+[STEP 1] Coarse TimeStep time: 0.248219337
+[STEP 1] FAB kilobyte spread across MPI nodes: [2328924 ... 2328924]
+
+[Level 0 step 2] ADVANCE with dt = 0.0002870783094
+[Level 0 step 2] Advanced 4194304 cells
+[Level 1 step 3] ADVANCE with dt = 0.0001435391547
+[Level 1 step 3] Advanced 4194304 cells
+[Level 1 step 4] ADVANCE with dt = 0.0001435391547
+[Level 1 step 4] Advanced 4194304 cells
+
+STEP = 2 TIME = 0.0005741559249 DT = 0.0002870783094
+
+
+[CNS] Total mass       is 1302338.0233411873
+      Total x-momentum is 1.9095345445960703e-19
+      Total y-momentum is 2.2996316260202882e-19
+      Total z-momentum is 2.3209944805054348
+      Total energy     is 7176192.0001133792
+
+[STEP 2] Coarse TimeStep time: 0.134943919
+[STEP 2] FAB kilobyte spread across MPI nodes: [2576408 ... 2576408]
+
+Now regridding at level lbase = 0
+STEP = 2 TIME = 0.0005741559249 : REGRID  with lbase = 0
+  Level 1   16 grids  4194304 cells  12.5 % of domain
+            smallest grid: 64 x 64 x 64  biggest grid: 64 x 64 x 64
+
+[Level 0 step 3] ADVANCE with dt = 0.0002870780246
+[Level 0 step 3] Advanced 4194304 cells
+[Level 1 step 5] ADVANCE with dt = 0.0001435390123
+[Level 1 step 5] Advanced 4194304 cells
+[Level 1 step 6] ADVANCE with dt = 0.0001435390123
+[Level 1 step 6] Advanced 4194304 cells
+
+STEP = 3 TIME = 0.0008612339496 DT = 0.0002870780246
+
+grid_places() time: 0.005860405 new finest: 1
+
+[CNS] Total mass       is 1302338.0233411775
+      Total x-momentum is 2.459715423349774e-20
+      Total y-momentum is 3.4147430364742626e-18
+      Total z-momentum is 3.7625461629590164
+      Total energy     is 7176191.9992529675
+
+[STEP 3] Coarse TimeStep time: 0.150294403
+[STEP 3] FAB kilobyte spread across MPI nodes: [2576408 ... 2576408]
+
+[Level 0 step 4] ADVANCE with dt = 0.0002870774356
+[Level 0 step 4] Advanced 4194304 cells
+[Level 1 step 7] ADVANCE with dt = 0.0001435387178
+[Level 1 step 7] Advanced 4194304 cells
+[Level 1 step 8] ADVANCE with dt = 0.0001435387178
+[Level 1 step 8] Advanced 4194304 cells
+
+STEP = 4 TIME = 0.001148311385 DT = 0.0002870774356
+
+
+[CNS] Total mass       is 1302338.0233411894
+      Total x-momentum is 4.0437352901920298e-18
+      Total y-momentum is -3.4479941256007758e-18
+      Total z-momentum is 5.3555979032626801
+      Total energy     is 7176191.9979551053
+
+[STEP 4] Coarse TimeStep time: 0.135285032
+[STEP 4] FAB kilobyte spread across MPI nodes: [2576408 ... 2576408]
+
+Now regridding at level lbase = 0
+STEP = 4 TIME = 0.001148311385 : REGRID  with lbase = 0
+  Level 1   16 grids  4194304 cells  12.5 % of domain
+            smallest grid: 64 x 64 x 64  biggest grid: 64 x 64 x 64
+
+[Level 0 step 5] ADVANCE with dt = 0.0002870767217
+[Level 0 step 5] Advanced 4194304 cells
+[Level 1 step 9] ADVANCE with dt = 0.0001435383608
+[Level 1 step 9] Advanced 4194304 cells
+[Level 1 step 10] ADVANCE with dt = 0.0001435383608
+[Level 1 step 10] Advanced 4194304 cells
+
+STEP = 5 TIME = 0.001435388107 DT = 0.0002870767217
+
+grid_places() time: 0.005727049 new finest: 1
+
+[CNS] Total mass       is 1302338.0233411877
+      Total x-momentum is 6.715664287988509e-19
+      Total y-momentum is -5.7139137362258946e-18
+      Total z-momentum is 7.0775892529196538
+      Total energy     is 7176191.9961796356
+
+[STEP 5] Coarse TimeStep time: 0.141982536
+[STEP 5] FAB kilobyte spread across MPI nodes: [2576408 ... 2576408]
+
+[Level 0 step 6] ADVANCE with dt = 0.0002870760002
+[Level 0 step 6] Advanced 4194304 cells
+[Level 1 step 11] ADVANCE with dt = 0.0001435380001
+[Level 1 step 11] Advanced 4194304 cells
+[Level 1 step 12] ADVANCE with dt = 0.0001435380001
+[Level 1 step 12] Advanced 4194304 cells
+
+STEP = 6 TIME = 0.001722464107 DT = 0.0002870760002
+
+
+[CNS] Total mass       is 1302338.0233411896
+      Total x-momentum is -4.047090078411459e-18
+      Total y-momentum is -6.8130785015137887e-18
+      Total z-momentum is 8.9091186975069014
+      Total energy     is 7176191.9938930543
+
+[STEP 6] Coarse TimeStep time: 0.134881335
+[STEP 6] FAB kilobyte spread across MPI nodes: [2576408 ... 2576408]
+
+Now regridding at level lbase = 0
+STEP = 6 TIME = 0.001722464107 : REGRID  with lbase = 0
+  Level 1   16 grids  4194304 cells  12.5 % of domain
+            smallest grid: 64 x 64 x 64  biggest grid: 64 x 64 x 64
+
+[Level 0 step 7] ADVANCE with dt = 0.0002870753412
+[Level 0 step 7] Advanced 4194304 cells
+[Level 1 step 13] ADVANCE with dt = 0.0001435376706
+[Level 1 step 13] Advanced 4194304 cells
+[Level 1 step 14] ADVANCE with dt = 0.0001435376706
+[Level 1 step 14] Advanced 4194304 cells
+
+STEP = 7 TIME = 0.002009539448 DT = 0.0002870753412
+
+grid_places() time: 0.005698489 new finest: 1
+
+[CNS] Total mass       is 1302338.0233411822
+      Total x-momentum is -1.1111394000407509e-17
+      Total y-momentum is -6.7970802214024377e-18
+      Total z-momentum is 10.833614362797901
+      Total energy     is 7176191.9910657816
+
+[STEP 7] Coarse TimeStep time: 0.154700665
+[STEP 7] FAB kilobyte spread across MPI nodes: [2576408 ... 2576408]
+
+[Level 0 step 8] ADVANCE with dt = 0.00028707478
+[Level 0 step 8] Advanced 4194304 cells
+[Level 1 step 15] ADVANCE with dt = 0.00014353739
+[Level 1 step 15] Advanced 4194304 cells
+[Level 1 step 16] ADVANCE with dt = 0.00014353739
+[Level 1 step 16] Advanced 4194304 cells
+
+STEP = 8 TIME = 0.002296614228 DT = 0.00028707478
+
+
+[CNS] Total mass       is 1302338.0233411943
+      Total x-momentum is -2.1920327091102926e-17
+      Total y-momentum is -5.8163672222902595e-17
+      Total z-momentum is 12.836984615501374
+      Total energy     is 7176191.9876738815
+
+[STEP 8] Coarse TimeStep time: 0.134658582
+[STEP 8] FAB kilobyte spread across MPI nodes: [2576408 ... 2576408]
+
+Now regridding at level lbase = 0
+STEP = 8 TIME = 0.002296614228 : REGRID  with lbase = 0
+  Level 1   16 grids  4194304 cells  12.5 % of domain
+            smallest grid: 64 x 64 x 64  biggest grid: 64 x 64 x 64
+
+[Level 0 step 9] ADVANCE with dt = 0.0002870743281
+[Level 0 step 9] Advanced 4194304 cells
+[Level 1 step 17] ADVANCE with dt = 0.000143537164
+[Level 1 step 17] Advanced 4194304 cells
+[Level 1 step 18] ADVANCE with dt = 0.000143537164
+[Level 1 step 18] Advanced 4194304 cells
+
+STEP = 9 TIME = 0.002583688556 DT = 0.0002870743281
+
+grid_places() time: 0.005434288 new finest: 1
+
+[CNS] Total mass       is 1302338.0233411915
+      Total x-momentum is -5.7939840176773045e-17
+      Total y-momentum is -3.9464959078472361e-17
+      Total z-momentum is 14.907274492170238
+      Total energy     is 7176191.9836963816
+
+[STEP 9] Coarse TimeStep time: 0.142074082
+[STEP 9] FAB kilobyte spread across MPI nodes: [2576408 ... 2576408]
+
+[Level 0 step 10] ADVANCE with dt = 0.0002870739818
+[Level 0 step 10] Advanced 4194304 cells
+[Level 1 step 19] ADVANCE with dt = 0.0001435369909
+[Level 1 step 19] Advanced 4194304 cells
+[Level 1 step 20] ADVANCE with dt = 0.0001435369909
+[Level 1 step 20] Advanced 4194304 cells
+
+STEP = 10 TIME = 0.002870762538 DT = 0.0002870739818
+
+
+[CNS] Total mass       is 1302338.023341181
+      Total x-momentum is -1.2961895772001579e-16
+      Total y-momentum is 6.7112114476852724e-17
+      Total z-momentum is 17.034345387466558
+      Total energy     is 7176191.97911576
+
+[STEP 10] Coarse TimeStep time: 0.134393533
+[STEP 10] FAB kilobyte spread across MPI nodes: [2576408 ... 2576408]
+
+Now regridding at level lbase = 0
+STEP = 10 TIME = 0.002870762538 : REGRID  with lbase = 0
+  Level 1   16 grids  4194304 cells  12.5 % of domain
+            smallest grid: 64 x 64 x 64  biggest grid: 64 x 64 x 64
+
+[Level 0 step 11] ADVANCE with dt = 0.0002870737289
+[Level 0 step 11] Advanced 4194304 cells
+[Level 1 step 21] ADVANCE with dt = 0.0001435368644
+[Level 1 step 21] Advanced 4194304 cells
+[Level 1 step 22] ADVANCE with dt = 0.0001435368644
+[Level 1 step 22] Advanced 4194304 cells
+
+STEP = 11 TIME = 0.003157836267 DT = 0.0002870737289
+
+grid_places() time: 0.00571468 new finest: 1
+
+[CNS] Total mass       is 1302338.0233412033
+      Total x-momentum is -9.3876997387492665e-17
+      Total y-momentum is -8.9013522171386971e-17
+      Total z-momentum is 19.209588257631413
+      Total energy     is 7176191.9739167867
+
+[STEP 11] Coarse TimeStep time: 0.142382572
+[STEP 11] FAB kilobyte spread across MPI nodes: [2576408 ... 2576408]
+
+[Level 0 step 12] ADVANCE with dt = 0.0002870735531
+[Level 0 step 12] Advanced 4194304 cells
+[Level 1 step 23] ADVANCE with dt = 0.0001435367766
+[Level 1 step 23] Advanced 4194304 cells
+[Level 1 step 24] ADVANCE with dt = 0.0001435367766
+[Level 1 step 24] Advanced 4194304 cells
+
+STEP = 12 TIME = 0.00344490982 DT = 0.0002870735531
+
+
+[CNS] Total mass       is 1302338.0233411931
+      Total x-momentum is -9.0639301619788171e-17
+      Total y-momentum is 7.0458267681449428e-17
+      Total z-momentum is 21.425674928290363
+      Total energy     is 7176191.9680872727
+
+[STEP 12] Coarse TimeStep time: 0.133377842
+[STEP 12] FAB kilobyte spread across MPI nodes: [2576408 ... 2576408]
+
+Now regridding at level lbase = 0
+STEP = 12 TIME = 0.00344490982 : REGRID  with lbase = 0
+  Level 1   16 grids  4194304 cells  12.5 % of domain
+            smallest grid: 64 x 64 x 64  biggest grid: 64 x 64 x 64
+
+[Level 0 step 13] ADVANCE with dt = 0.0002870734377
+[Level 0 step 13] Advanced 4194304 cells
+[Level 1 step 25] ADVANCE with dt = 0.0001435367188
+[Level 1 step 25] Advanced 4194304 cells
+[Level 1 step 26] ADVANCE with dt = 0.0001435367188
+[Level 1 step 26] Advanced 4194304 cells
+
+STEP = 13 TIME = 0.003731983258 DT = 0.0002870734377
+
+grid_places() time: 0.005594802 new finest: 1
+
+[CNS] Total mass       is 1302338.0233411882
+      Total x-momentum is -5.93706189548587e-17
+      Total y-momentum is -3.6577473023884407e-16
+      Total z-momentum is 23.676347925915213
+      Total energy     is 7176191.9616157608
+
+[STEP 13] Coarse TimeStep time: 0.142425567
+[STEP 13] FAB kilobyte spread across MPI nodes: [2576408 ... 2576408]
+
+[Level 0 step 14] ADVANCE with dt = 0.000287073367
+[Level 0 step 14] Advanced 4194304 cells
+[Level 1 step 27] ADVANCE with dt = 0.0001435366835
+[Level 1 step 27] Advanced 4194304 cells
+[Level 1 step 28] ADVANCE with dt = 0.0001435366835
+[Level 1 step 28] Advanced 4194304 cells
+
+STEP = 14 TIME = 0.004019056625 DT = 0.000287073367
+
+
+[CNS] Total mass       is 1302338.0233411777
+      Total x-momentum is 1.1103863911398676e-16
+      Total y-momentum is 1.5639841989968384e-16
+      Total z-momentum is 25.956246439946817
+      Total energy     is 7176191.9544938384
+
+[STEP 14] Coarse TimeStep time: 0.148166007
+[STEP 14] FAB kilobyte spread across MPI nodes: [2576408 ... 2576408]
+
+Now regridding at level lbase = 0
+STEP = 14 TIME = 0.004019056625 : REGRID  with lbase = 0
+  Level 1   16 grids  4194304 cells  12.5 % of domain
+            smallest grid: 64 x 64 x 64  biggest grid: 64 x 64 x 64
+
+[Level 0 step 15] ADVANCE with dt = 0.0002870733276
+[Level 0 step 15] Advanced 4194304 cells
+[Level 1 step 29] ADVANCE with dt = 0.0001435366638
+[Level 1 step 29] Advanced 4194304 cells
+[Level 1 step 30] ADVANCE with dt = 0.0001435366638
+[Level 1 step 30] Advanced 4194304 cells
+
+STEP = 15 TIME = 0.004306129952 DT = 0.0002870733276
+
+grid_places() time: 0.005771097 new finest: 1
+
+[CNS] Total mass       is 1302338.0233411919
+      Total x-momentum is -2.0230116227558104e-17
+      Total y-momentum is -4.2465220347055836e-16
+      Total z-momentum is 28.260764354252231
+      Total energy     is 7176191.9467135528
+
+[STEP 15] Coarse TimeStep time: 0.142736679
+[STEP 15] FAB kilobyte spread across MPI nodes: [2576408 ... 2576408]
+
+[Level 0 step 16] ADVANCE with dt = 0.000287073309
+[Level 0 step 16] Advanced 4194304 cells
+[Level 1 step 31] ADVANCE with dt = 0.0001435366545
+[Level 1 step 31] Advanced 4194304 cells
+[Level 1 step 32] ADVANCE with dt = 0.0001435366545
+[Level 1 step 32] Advanced 4194304 cells
+
+STEP = 16 TIME = 0.004593203261 DT = 0.000287073309
+
+
+[CNS] Total mass       is 1302338.0233412052
+      Total x-momentum is 1.0594157333054857e-16
+      Total y-momentum is -1.5081660836079217e-16
+      Total z-momentum is 30.585935518167975
+      Total energy     is 7176191.9382683458
+
+[STEP 16] Coarse TimeStep time: 0.134432075
+[STEP 16] FAB kilobyte spread across MPI nodes: [2576408 ... 2576408]
+
+Now regridding at level lbase = 0
+STEP = 16 TIME = 0.004593203261 : REGRID  with lbase = 0
+  Level 1   16 grids  4194304 cells  12.5 % of domain
+            smallest grid: 64 x 64 x 64  biggest grid: 64 x 64 x 64
+
+[Level 0 step 17] ADVANCE with dt = 0.0002870733031
+[Level 0 step 17] Advanced 4194304 cells
+[Level 1 step 33] ADVANCE with dt = 0.0001435366516
+[Level 1 step 33] Advanced 4194304 cells
+[Level 1 step 34] ADVANCE with dt = 0.0001435366516
+[Level 1 step 34] Advanced 4194304 cells
+
+STEP = 17 TIME = 0.004880276564 DT = 0.0002870733031
+
+grid_places() time: 0.005733635 new finest: 1
+
+[CNS] Total mass       is 1302338.0233411854
+      Total x-momentum is -2.0638555071187271e-16
+      Total y-momentum is -1.0606068101108889e-15
+      Total z-momentum is 32.928341316523905
+      Total energy     is 7176191.9291528836
+
+[STEP 17] Coarse TimeStep time: 0.142430693
+[STEP 17] FAB kilobyte spread across MPI nodes: [2576408 ... 2576408]
+
+[Level 0 step 18] ADVANCE with dt = 0.0002870733041
+[Level 0 step 18] Advanced 4194304 cells
+[Level 1 step 35] ADVANCE with dt = 0.0001435366521
+[Level 1 step 35] Advanced 4194304 cells
+[Level 1 step 36] ADVANCE with dt = 0.0001435366521
+[Level 1 step 36] Advanced 4194304 cells
+
+STEP = 18 TIME = 0.005167349868 DT = 0.0002870733041
+
+
+[CNS] Total mass       is 1302338.0233411866
+      Total x-momentum is 4.5641264876799113e-17
+      Total y-momentum is -1.1509713007145301e-16
+      Total z-momentum is 35.285035925911714
+      Total energy     is 7176191.9193629362
+
+[STEP 18] Coarse TimeStep time: 0.134708862
+[STEP 18] FAB kilobyte spread across MPI nodes: [2576408 ... 2576408]
+
+Now regridding at level lbase = 0
+STEP = 18 TIME = 0.005167349868 : REGRID  with lbase = 0
+  Level 1   16 grids  4194304 cells  12.5 % of domain
+            smallest grid: 64 x 64 x 64  biggest grid: 64 x 64 x 64
+
+[Level 0 step 19] ADVANCE with dt = 0.0002870733082
+[Level 0 step 19] Advanced 4194304 cells
+[Level 1 step 37] ADVANCE with dt = 0.0001435366541
+[Level 1 step 37] Advanced 4194304 cells
+[Level 1 step 38] ADVANCE with dt = 0.0001435366541
+[Level 1 step 38] Advanced 4194304 cells
+
+STEP = 19 TIME = 0.005454423177 DT = 0.0002870733082
+
+grid_places() time: 0.005440019 new finest: 1
+
+[CNS] Total mass       is 1302338.0233411973
+      Total x-momentum is -2.9300668036126221e-17
+      Total y-momentum is 1.3809988538077436e-15
+      Total z-momentum is 37.653485228065406
+      Total energy     is 7176191.9088942548
+
+[STEP 19] Coarse TimeStep time: 0.142422754
+[STEP 19] FAB kilobyte spread across MPI nodes: [2576408 ... 2576408]
+
+[Level 0 step 20] ADVANCE with dt = 0.0002870733131
+[Level 0 step 20] Advanced 4194304 cells
+[Level 1 step 39] ADVANCE with dt = 0.0001435366565
+[Level 1 step 39] Advanced 4194304 cells
+[Level 1 step 40] ADVANCE with dt = 0.0001435366565
+[Level 1 step 40] Advanced 4194304 cells
+
+STEP = 20 TIME = 0.00574149649 DT = 0.0002870733131
+
+
+[CNS] Total mass       is 1302338.0233411989
+      Total x-momentum is 1.3515566283098001e-16
+      Total y-momentum is 4.4937591846849219e-16
+      Total z-momentum is 40.031516048436188
+      Total energy     is 7176191.8977444917
+
+[STEP 20] Coarse TimeStep time: 0.134551291
+[STEP 20] FAB kilobyte spread across MPI nodes: [2576408 ... 2576408]
+
+PLOTFILE: file = plt00020
+Write plotfile time = 0.792038681  seconds
+
+Run Time total        = 4.663270813
+Run Time init         = 0.95925818
+Run Time advance      = 2.91109363
+
+
+TinyProfiler total time across processes [min...avg...max]: 4.663 ... 4.663 ... 4.663
+
+-------------------------------------------------------------------------------------------
+Name                                        NCalls  Excl. Min  Excl. Avg  Excl. Max   Max %
+-------------------------------------------------------------------------------------------
+VisMF::Write(FabArray)                           4      1.576      1.576      1.576  33.80%
+CNS::compute_dSdt()                            120      1.136      1.136      1.136  24.36%
+FabArrayBase::CPC::define()                    178     0.7911     0.7911     0.7911  16.96%
+FabArray::ParallelCopy()                       692     0.2088     0.2088     0.2088   4.48%
+FluxRegister::Reflux()                         120     0.1283     0.1283     0.1283   2.75%
+MultiFab::LinComb()                            120     0.1208     0.1208     0.1208   2.59%
+StateData::define()                             12     0.1124     0.1124     0.1124   2.41%
+CNS::advance()                                  60     0.1115     0.1115     0.1115   2.39%
+MultiFab::Saxpy()                               60    0.05537    0.05537    0.05537   1.19%
+FabArray::setVal()                             282    0.05372    0.05372    0.05372   1.15%
+FillPatchTwoLevels                              89    0.05082    0.05082    0.05082   1.09%
+CNS::computeTemp()                             141    0.04767    0.04767    0.04767   1.02%
+FillPatchSingleLevel                           220    0.03783    0.03783    0.03783   0.81%
+StateDataPhysBCFunct::()                       220    0.03531    0.03531    0.03531   0.76%
+AmrMesh::MakeNewGrids()                         11    0.03315    0.03315    0.03315   0.71%
+StateData::FillBoundary(geom)                 1224    0.03072    0.03072    0.03072   0.66%
+CellConservativeLinear::interp()               480    0.02561    0.02561    0.02561   0.55%
+CNS::initData()                                  3    0.01655    0.01655    0.01655   0.35%
+CNS::estTimeStep()                              41    0.01481    0.01481    0.01481   0.32%
+Amr::regrid()                                   10    0.01456    0.01456    0.01456   0.31%
+postCoarseTimeStep()                            20    0.01424    0.01424    0.01424   0.31%
+amrex::average_down                             21    0.01048    0.01048    0.01048   0.22%
+FillPatchIterator::Initialize                  140   0.008454   0.008454   0.008454   0.18%
+Amr::writePlotFile()                             2   0.005696   0.005696   0.005696   0.12%
+CNS::errorEst()                                 11   0.005153   0.005153   0.005153   0.11%
+CNS::writePlotFile()                             4   0.003556   0.003556   0.003556   0.08%
+TagBoxArray::mapPRD                             11   0.002857   0.002857   0.002857   0.06%
+TagBoxArray::collate()                          11   0.002699   0.002699   0.002699   0.06%
+Amr::coarseTimeStep()                           20   0.002096   0.002096   0.002096   0.04%
+Amr::timeStep()                                 60   0.001388   0.001388   0.001388   0.03%
+OwnerMask()                                     11   0.001339   0.001339   0.001339   0.03%
+FabArrayBase::getCPC()                         692   0.001109   0.001109   0.001109   0.02%
+Amr::bldFineLevels()                             1   0.001102   0.001102   0.001102   0.02%
+Amr::FinalizeInit()                              1  0.0007999  0.0007999  0.0007999   0.02%
+post_timestep                                   60  0.0005502  0.0005502  0.0005502   0.01%
+main()                                           1   0.000292   0.000292   0.000292   0.01%
+Amr::InitAmr()                                   1  0.0001364  0.0001364  0.0001364   0.00%
+AmrLevel::AmrLevel(dm)                          12  7.659e-05  7.659e-05  7.659e-05   0.00%
+AmrMesh-cluster                                 11  7.118e-05  7.118e-05  7.118e-05   0.00%
+FabArrayBase::TheFPinfo()                       80  6.986e-05  6.986e-05  6.986e-05   0.00%
+Amr::grid_places()                              11  6.824e-05  6.824e-05  6.824e-05   0.00%
+CNS::avgDown()                                  21  5.264e-05  5.264e-05  5.264e-05   0.00%
+FPinfo::FPinfo()                                 1  3.382e-05  3.382e-05  3.382e-05   0.00%
+ClusterList::intersect()                        11  2.941e-05  2.941e-05  2.941e-05   0.00%
+amrex::average_down_w_geom                      21  2.569e-05  2.569e-05  2.569e-05   0.00%
+DistributionMapping::LeastUsedCPUs()             3  1.967e-05  1.967e-05  1.967e-05   0.00%
+BoxList::parallelComplementIn()                 22  1.643e-05  1.643e-05  1.643e-05   0.00%
+Amr::defBaseLevel()                              1  1.319e-05  1.319e-05  1.319e-05   0.00%
+BoxList::complementIn                           22  1.056e-05  1.056e-05  1.056e-05   0.00%
+Amr::InitializeInit()                            1  9.419e-06  9.419e-06  9.419e-06   0.00%
+DistributionMapping::SFCProcessorMapDoIt()       2   8.52e-06   8.52e-06   8.52e-06   0.00%
+Amr::initSubcycle()                              1  6.821e-06  6.821e-06  6.821e-06   0.00%
+ClusterList::chop()                             11  5.544e-06  5.544e-06  5.544e-06   0.00%
+Amr::readProbinFile()                            1  4.582e-06  4.582e-06  4.582e-06   0.00%
+Amr::init()                                      1  3.883e-06  3.883e-06  3.883e-06   0.00%
+DistributionMapping::Distribute()                2  3.017e-06  3.017e-06  3.017e-06   0.00%
+Amr::initialInit()                               1  2.387e-06  2.387e-06  2.387e-06   0.00%
+-------------------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------------------
+Name                                        NCalls  Incl. Min  Incl. Avg  Incl. Max   Max %
+-------------------------------------------------------------------------------------------
+main()                                           1      4.663      4.663      4.663 100.00%
+Amr::coarseTimeStep()                           20      2.911      2.911      2.911  62.43%
+Amr::timeStep()                                 60       2.88       2.88       2.88  61.76%
+CNS::advance()                                  60      2.565      2.565      2.565  55.00%
+Amr::writePlotFile()                             2      1.585      1.585      1.585  34.00%
+CNS::writePlotFile()                             4       1.58       1.58       1.58  33.87%
+VisMF::Write(FabArray)                           4      1.576      1.576      1.576  33.80%
+CNS::compute_dSdt()                            120      1.162      1.162      1.162  24.91%
+FillPatchIterator::Initialize                  140      1.117      1.117      1.117  23.96%
+FabArray::ParallelCopy()                       692      1.001      1.001      1.001  21.47%
+FillPatchTwoLevels                              89     0.9623     0.9623     0.9623  20.64%
+Amr::init()                                      1      0.959      0.959      0.959  20.57%
+FabArrayBase::getCPC()                         692     0.7922     0.7922     0.7922  16.99%
+FabArrayBase::CPC::define()                    178     0.7911     0.7911     0.7911  16.96%
+FillPatchSingleLevel                           220     0.3496     0.3496     0.3496   7.50%
+post_timestep                                   60     0.2354     0.2354     0.2354   5.05%
+FluxRegister::Reflux()                         120      0.212      0.212      0.212   4.55%
+Amr::initialInit()                               1     0.1665     0.1665     0.1665   3.57%
+MultiFab::LinComb()                            120     0.1208     0.1208     0.1208   2.59%
+Amr::InitializeInit()                            1     0.1192     0.1192     0.1192   2.56%
+Amr::defBaseLevel()                              1     0.1192     0.1192     0.1192   2.56%
+AmrLevel::AmrLevel(dm)                          12     0.1125     0.1125     0.1125   2.41%
+StateData::define()                             12     0.1124     0.1124     0.1124   2.41%
+Amr::regrid()                                   10    0.09255    0.09255    0.09255   1.98%
+Amr::grid_places()                              11    0.07721    0.07721    0.07721   1.66%
+AmrMesh::MakeNewGrids()                         11    0.07714    0.07714    0.07714   1.65%
+StateDataPhysBCFunct::()                       220    0.06603    0.06603    0.06603   1.42%
+MultiFab::Saxpy()                               60    0.05537    0.05537    0.05537   1.19%
+FabArray::setVal()                             282    0.05372    0.05372    0.05372   1.15%
+CNS::computeTemp()                             141    0.04767    0.04767    0.04767   1.02%
+Amr::FinalizeInit()                              1    0.04725    0.04725    0.04725   1.01%
+Amr::bldFineLevels()                             1    0.03814    0.03814    0.03814   0.82%
+CNS::errorEst()                                 11    0.03323    0.03323    0.03323   0.71%
+StateData::FillBoundary(geom)                 1224    0.03072    0.03072    0.03072   0.66%
+CNS::avgDown()                                  21    0.02762    0.02762    0.02762   0.59%
+CellConservativeLinear::interp()               480    0.02561    0.02561    0.02561   0.55%
+amrex::average_down_w_geom                      21    0.02047    0.02047    0.02047   0.44%
+amrex::average_down                             21    0.02045    0.02045    0.02045   0.44%
+CNS::initData()                                  3    0.01655    0.01655    0.01655   0.35%
+CNS::estTimeStep()                              41    0.01481    0.01481    0.01481   0.32%
+postCoarseTimeStep()                            20    0.01424    0.01424    0.01424   0.31%
+TagBoxArray::mapPRD                             11   0.005977   0.005977   0.005977   0.13%
+TagBoxArray::collate()                          11   0.002699   0.002699   0.002699   0.06%
+OwnerMask()                                     11   0.001339   0.001339   0.001339   0.03%
+Amr::InitAmr()                                   1  0.0001432  0.0001432  0.0001432   0.00%
+FabArrayBase::TheFPinfo()                       80  0.0001106  0.0001106  0.0001106   0.00%
+AmrMesh-cluster                                 11  0.0001061  0.0001061  0.0001061   0.00%
+FPinfo::FPinfo()                                 1  4.076e-05  4.076e-05  4.076e-05   0.00%
+ClusterList::intersect()                        11  2.941e-05  2.941e-05  2.941e-05   0.00%
+BoxList::parallelComplementIn()                 22  2.698e-05  2.698e-05  2.698e-05   0.00%
+DistributionMapping::SFCProcessorMapDoIt()       2  2.427e-05  2.427e-05  2.427e-05   0.00%
+DistributionMapping::LeastUsedCPUs()             3  1.967e-05  1.967e-05  1.967e-05   0.00%
+BoxList::complementIn                           22  1.056e-05  1.056e-05  1.056e-05   0.00%
+Amr::initSubcycle()                              1  6.821e-06  6.821e-06  6.821e-06   0.00%
+ClusterList::chop()                             11  5.544e-06  5.544e-06  5.544e-06   0.00%
+Amr::readProbinFile()                            1  4.582e-06  4.582e-06  4.582e-06   0.00%
+DistributionMapping::Distribute()                2  3.017e-06  3.017e-06  3.017e-06   0.00%
+-------------------------------------------------------------------------------------------
+
+Total GPU global memory (MB) spread across MPI: [16160 ... 16160]
+Free  GPU global memory (MB) spread across MPI: [12161 ... 12161]
+[The         Arena] space (MB) allocated spread across MPI: [12120 ... 12120]
+[The         Arena] space (MB) used      spread across MPI: [0 ... 0]
+[The  Device Arena] space (MB) allocated spread across MPI: [8 ... 8]
+[The  Device Arena] space (MB) used      spread across MPI: [0 ... 0]
+[The Managed Arena] space (MB) allocated spread across MPI: [8 ... 8]
+[The Managed Arena] space (MB) used      spread across MPI: [0 ... 0]
+[The  Pinned Arena] space (MB) allocated spread across MPI: [8 ... 8]
+[The  Pinned Arena] space (MB) used      spread across MPI: [0 ... 0]
+AMReX (20.09-45-g50e3994bb3cb) finalized
+Processing events...
+Capturing symbol files...
+Saving temporary "/tmp/nsys-report-36be-e50a-74d5-dbe2.qdstrm" file to disk...
+Creating final output files...
+
+Processing [0%                                                                ]Processing [2%                                                                ]Processing [4%                                                                ]Processing [=6%                                                               ]Processing [==7%                                                              ]Processing [===9%                                                             ]Processing [====11%                                                           ]Processing [====12%                                                           ]Processing [=====13%                                                          ]Processing [======14%                                                         ]Processing [======15%                                                         ]Processing [=======16%                                                        ]Processing [========17%                                                       ]Processing [========18%                                                       ]Processing [=========19%                                                      ]Processing [==========20%                                                     ]Processing [==========21%                                                     ]Processing [===========22%                                                    ]Processing [============23%                                                   ]Processing [============24%                                                   ]Processing [=============25%                                                  ]Processing [==============26%                                                 ]Processing [==============27%                                                 ]Processing [===============28%                                                ]Processing [================29%                                               ]Processing [================30%                                               ]Processing [=================31%                                              ]Processing [==================32%                                             ]Processing [==================33%                                             ]Processing [===================34%                                            ]Processing [====================35%                                           ]Processing [====================36%                                           ]Processing [=====================37%                                          ]Processing [======================38%                                         ]Processing [======================39%                                         ]Processing [=======================40%                                        ]Processing [========================41%                                       ]Processing [========================42%                                       ]Processing [=========================43%                                      ]Processing [==========================44%                                     ]Processing [==========================45%                                     ]Processing [===========================46%                                    ]Processing [============================47%                                   ]Processing [============================48%                                   ]Processing [=============================49%                                  ]Processing [==============================50%                                 ]Processing [==============================51%                                 ]Processing [===============================52%                                ]Processing [===============================53%                                ]Processing [================================54%                               ]Processing [=================================55%                              ]Processing [=================================56%                              ]Processing [==================================57%                             ]Processing [===================================58%                            ]Processing [===================================59%                            ]Processing [====================================60%                           ]Processing [=====================================61%                          ]Processing [=====================================62%                          ]Processing [======================================63%                         ]Processing [=======================================64%                        ]Processing [=======================================65%                        ]Processing [========================================66%                       ]Processing [=========================================67%                      ]Processing [=========================================68%                      ]Processing [==========================================69%                     ]Processing [===========================================70%                    ]Processing [===========================================71%                    ]Processing [============================================72%                   ]Processing [=============================================73%                  ]Processing [=============================================74%                  ]Processing [==============================================75%                 ]Processing [===============================================76%                ]Processing [===============================================77%                ]Processing [================================================78%               ]Processing [=================================================79%              ]Processing [=================================================80%              ]Processing [==================================================81%             ]Processing [===================================================82%            ]Processing [===================================================83%            ]Processing [==============================================================100%]
+Saved report file to "/tmp/nsys-report-36be-e50a-74d5-dbe2.qdrep"
+Report file moved to "/home/u00u5ketgidiuHrRnz357/new/amrex/Tutorials/GPU/CNS/Exec/RT/report1.qdrep"

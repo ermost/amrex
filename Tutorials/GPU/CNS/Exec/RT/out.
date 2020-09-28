@@ -1,0 +1,24 @@
+[cpu0547:06644] MCW rank 0 bound to socket 0[core 0[hwt 0-1]], socket 0[core 1[hwt 0-1]], socket 0[core 2[hwt 0-1]], socket 0[core 3[hwt 0-1]], socket 0[core 4[hwt 0-1]]: [BB/BB/BB/BB/BB/../../../../../../..][../../../../../../../../../../../..]
+Warning: LBR backtrace method is not supported on this platform. DWARF backtrace method will be used.
+Collecting data...
+/home/u00u5ketgidiuHrRnz357/new/amrex/Tutorials/GPU/CNS/Exec/RT/./CNS3d.gnu.TPROF.MPI.CUDA.ex: error while loading shared libraries: libcuda.so.1: cannot open shared object file: No such file or directory
+
+The target application returned non-zero exit code 127
+Processing events...
+Saving temporary "/tmp/nsys-report-23d3-6596-9775-0f9f.qdstrm" file to disk...
+Creating final output files...
+
+Processing [0%                                                                ]Processing [==============================50%                                 ]Processing [==============================================================100%]Processing [==============================================================100%]
+Saved report file to "/tmp/nsys-report-23d3-6596-9775-0f9f.qdrep"
+Report file moved to "/home/u00u5ketgidiuHrRnz357/new/amrex/Tutorials/GPU/CNS/Exec/RT/report1.qdrep"
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpirun detected that one or more processes exited with non-zero status, thus causing
+the job to be terminated. The first process to do so was:
+
+  Process name: [[15314,1],0]
+  Exit code:    127
+--------------------------------------------------------------------------
