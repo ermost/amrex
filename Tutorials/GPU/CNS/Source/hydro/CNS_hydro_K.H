@@ -134,22 +134,17 @@ T WENOZ(std::array<T, 5> const &WENOVAR) {
           amrex::Abort(); 
         }
 
-        if(std::isnan(f[0]) || std::isnan(f[1]) || std::isnan(f[1])) {
+        if(std::isnan(f[0]) || std::isnan(f[1]) || std::isnan(f[2])) {
           printf("NaN in f \n");
           amrex::Abort(); 
         }
 
-        if(std::isnan(beta[0]) || std::isnan(beta[1]) || std::isnan(beta[1])) {
+        if(std::isnan(beta[0]) || std::isnan(beta[1]) || std::isnan(beta[2])) {
           printf("NaN in beta \n");
           amrex::Abort(); 
         }
 
-        if(std::isnan(beta[0]) || std::isnan(beta[1]) || std::isnan(beta[1])) {
-          printf("NaN in beta \n");
-          amrex::Abort(); 
-        }
-
-        if(std::isnan(indicator[0]) || std::isnan(indicator[1]) || std::isnan(indicator[1])) {
+        if(std::isnan(indicator[0]) || std::isnan(indicator[1]) || std::isnan(indicator[2])) {
           printf("NaN in indicator \n");
           amrex::Abort(); 
         }
@@ -159,7 +154,7 @@ T WENOZ(std::array<T, 5> const &WENOVAR) {
           amrex::Abort(); 
         }
 
-        if(std::isnan(alpha[0]) || std::isnan(alpha[1]) || std::isnan(alpha[1])) {
+        if(std::isnan(alpha[0]) || std::isnan(alpha[1]) || std::isnan(alpha[2])) {
           printf("NaN in indicator \n");
           amrex::Abort(); 
         }
