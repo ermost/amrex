@@ -187,6 +187,11 @@ T WENOZ(std::array<T, 5> const &WENOVAR) {
             flux += f[i] * alpha[i]; // / alpha_sum;
         };
 
+        if(std::isnan(flux / alpha_sum)) {
+          printf("NaN in result");
+          amrex::Abort(); 
+        }
+
         return flux / alpha_sum;
     };
 
@@ -214,12 +219,12 @@ cns_wenoz_x (int i, int j, int k,
 
        dqR(i,j,k, nn) = WENOZ<false,Real>(WENOVAR);
        dqL(i+1,j,k, nn) = WENOZ<true,Real>(WENOVAR);
-
+/*
     if(std::isnan(dqR(i,j,k, nn)) || dqL(i+1,j,k, nn)) {
       printf("wenoz-x NaN in comp %d index %d,%d,%d \n", nn, i,j,k);
       amrex::Abort();
     }
-
+*/
     };
 }
 
@@ -245,12 +250,12 @@ cns_wenoz_y (int i, int j, int k,
 
        dqR(i,j,k, nn) = WENOZ<false,Real>(WENOVAR);
        dqL(i,j+1,k, nn) = WENOZ<true,Real>(WENOVAR);
-
+/*
     if(std::isnan(dqR(i,j,k, nn)) || dqL(i,j+1,k, nn)) {
       printf("wenoz-y NaN in comp %d index %d,%d,%d \n", nn, i,j,k);
       amrex::Abort();
     }
-
+*/
     };
 }
 
@@ -276,12 +281,12 @@ cns_wenoz_z (int i, int j, int k,
 
        dqR(i,j,k, nn) = WENOZ<false, Real>(WENOVAR);
        dqL(i,j,k+1, nn) = WENOZ<true, Real>(WENOVAR);
-
+/*
     if(std::isnan(dqR(i,j,k, nn)) || dqL(i,j,k+1, nn)) {
       printf("wenoz-z NaN in comp %d index %d,%d,%d \n", nn, i,j,k);
       amrex::Abort();
     }
-
+*/
     };
 }
 
