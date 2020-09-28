@@ -126,6 +126,9 @@ T WENOZ(std::array<T, 5> const &WENOVAR) {
         const T indicator[3]{(tau_5) / (beta[0] + epsL), (tau_5) / (beta[1] + epsL),
                              (tau_5) / (beta[2] + epsL)};
 
+        T alpha[3]{1. + SQ(indicator[0]), 1. + SQ(indicator[1]),
+                   1. + SQ(indicator[2])};
+
         if(std::isnan(WENOVAR[minus2]) || std::isnan(WENOVAR[minus1]) || std::isnan(WENOVAR[plus0]) || std::isnan(WENOVAR[plus1]) || std::isnan(WENOVAR[plus2])) {
           printf("NaN in WENOVAR");
           amrex::Abort(); 
@@ -141,8 +144,26 @@ T WENOZ(std::array<T, 5> const &WENOVAR) {
           amrex::Abort(); 
         }
 
-        T alpha[3]{1. + SQ(indicator[0]), 1. + SQ(indicator[1]),
-                   1. + SQ(indicator[2])};
+        if(std::isnan(beta[0]) || std::isnan(beta[1]) || std::isnan(beta[1])) {
+          printf("NaN in beta");
+          amrex::Abort(); 
+        }
+
+        if(std::isnan(indicator[0]) || std::isnan(indicator[1]) || std::isnan(indicator[1])) {
+          printf("NaN in indicator");
+          amrex::Abort(); 
+        }
+
+        if(std::isnan(tau_5)) {
+          printf("NaN in tau_5");
+          amrex::Abort(); 
+        }
+
+        if(std::isnan(alpha[0]) || std::isnan(alpha[1]) || std::isnan(alpha[1])) {
+          printf("NaN in indicator");
+          amrex::Abort(); 
+        }
+
 
         T alpha_sum = 0.;
 //        if constexpr (FD) {
