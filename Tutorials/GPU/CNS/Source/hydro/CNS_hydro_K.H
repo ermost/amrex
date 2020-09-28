@@ -130,37 +130,37 @@ T WENOZ(std::array<T, 5> const &WENOVAR) {
                    1. + SQ(indicator[2])};
 
         if(std::isnan(WENOVAR[minus2]) || std::isnan(WENOVAR[minus1]) || std::isnan(WENOVAR[plus0]) || std::isnan(WENOVAR[plus1]) || std::isnan(WENOVAR[plus2])) {
-          printf("NaN in WENOVAR");
+          printf("NaN in WENOVAR \n");
           amrex::Abort(); 
         }
 
         if(std::isnan(f[0]) || std::isnan(f[1]) || std::isnan(f[1])) {
-          printf("NaN in f");
+          printf("NaN in f \n");
           amrex::Abort(); 
         }
 
         if(std::isnan(beta[0]) || std::isnan(beta[1]) || std::isnan(beta[1])) {
-          printf("NaN in beta");
+          printf("NaN in beta \n");
           amrex::Abort(); 
         }
 
         if(std::isnan(beta[0]) || std::isnan(beta[1]) || std::isnan(beta[1])) {
-          printf("NaN in beta");
+          printf("NaN in beta \n");
           amrex::Abort(); 
         }
 
         if(std::isnan(indicator[0]) || std::isnan(indicator[1]) || std::isnan(indicator[1])) {
-          printf("NaN in indicator");
+          printf("NaN in indicator \n");
           amrex::Abort(); 
         }
 
         if(std::isnan(tau_5)) {
-          printf("NaN in tau_5");
+          printf("NaN in tau_5 \n");
           amrex::Abort(); 
         }
 
         if(std::isnan(alpha[0]) || std::isnan(alpha[1]) || std::isnan(alpha[1])) {
-          printf("NaN in indicator");
+          printf("NaN in indicator \n");
           amrex::Abort(); 
         }
 
@@ -174,7 +174,7 @@ T WENOZ(std::array<T, 5> const &WENOVAR) {
 //            };
 //        } else { // FV
 
-#pragma unroll
+//#pragma unroll
             for (int i = 0; i < 3; ++i) {
                 alpha[i] *= dFV[i];
                 alpha_sum += alpha[i];
@@ -182,13 +182,23 @@ T WENOZ(std::array<T, 5> const &WENOVAR) {
 //        }
 
         T flux = 0.;
-#pragma unroll
+//#pragma unroll
         for (int i = 0; i < 3; ++i) {
             flux += f[i] * alpha[i]; // / alpha_sum;
         };
 
+        if(std::isnan(alpha_sum)) {
+          printf("NaN in result \n");
+          amrex::Abort(); 
+        }
+
+        if(std::isnan(flux)) {
+          printf("NaN in flux \n");
+          amrex::Abort(); 
+        }
+
         if(std::isnan(flux / alpha_sum)) {
-          printf("NaN in result");
+          printf("NaN in result \n");
           amrex::Abort(); 
         }
 
