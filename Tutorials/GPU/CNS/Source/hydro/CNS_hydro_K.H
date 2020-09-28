@@ -194,6 +194,8 @@ T WENOZ(std::array<T, 5> const &WENOVAR) {
 
         if(std::isnan(flux)) {
           printf("NaN in flux \n");
+
+          printf("f: %f %f %f, alpha: %f %f %f \n", f[0], f[1], f[2], alpha[0], alpha[1], alpha[2]);
           amrex::Abort(); 
         }
 
