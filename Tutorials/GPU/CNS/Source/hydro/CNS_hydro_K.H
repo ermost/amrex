@@ -126,6 +126,21 @@ T WENOZ(std::array<T, 5> const &WENOVAR) {
         const T indicator[3]{(tau_5) / (beta[0] + epsL), (tau_5) / (beta[1] + epsL),
                              (tau_5) / (beta[2] + epsL)};
 
+        if(std::isnan(WENOVAR[minus2]) || std::isnan(WENOVAR[minus1]) || std::isnan(WENOVAR[plus0] || std::isnan(WENOVAR[plus1] || std::isnan(WENOVAR[plus2])) {
+          printf("NaN in WENOVAR");
+          amrex::Abort(); 
+        }
+
+        if(std::isnan(f[0]) || std::isnan(f[1]) || std::isnan(f[1])) {
+          printf("NaN in f");
+          amrex::Abort(); 
+        }
+
+        if(std::isnan(beta[0]) || std::isnan(beta[1]) || std::isnan(beta[1])) {
+          printf("NaN in beta");
+          amrex::Abort(); 
+        }
+
         T alpha[3]{1. + SQ(indicator[0]), 1. + SQ(indicator[1]),
                    1. + SQ(indicator[2])};
 
@@ -179,6 +194,10 @@ cns_wenoz_x (int i, int j, int k,
        dqR(i,j,k, nn) = WENOZ<false,Real>(WENOVAR);
        dqL(i+1,j,k, nn) = WENOZ<true,Real>(WENOVAR);
 
+    if(std::isnan(dqR(i,j,k, nn)) || dqL(i+1,j,k, nn)) {
+      printf("wenoz-x NaN in comp %d index %d,%d,%d \n", nn, i,j,k);
+      amrex::Abort();
+    }
 
     };
 }
@@ -206,6 +225,11 @@ cns_wenoz_y (int i, int j, int k,
        dqR(i,j,k, nn) = WENOZ<false,Real>(WENOVAR);
        dqL(i,j+1,k, nn) = WENOZ<true,Real>(WENOVAR);
 
+    if(std::isnan(dqR(i,j,k, nn)) || dqL(i,j+1,k, nn)) {
+      printf("wenoz-y NaN in comp %d index %d,%d,%d \n", nn, i,j,k);
+      amrex::Abort();
+    }
+
     };
 }
 
@@ -231,6 +255,12 @@ cns_wenoz_z (int i, int j, int k,
 
        dqR(i,j,k, nn) = WENOZ<false, Real>(WENOVAR);
        dqL(i,j,k+1, nn) = WENOZ<true, Real>(WENOVAR);
+
+    if(std::isnan(dqR(i,j,k, nn)) || dqL(i,j,k+1, nn)) {
+      printf("wenoz-z NaN in comp %d index %d,%d,%d \n", nn, i,j,k);
+      amrex::Abort();
+    }
+
     };
 }
 
