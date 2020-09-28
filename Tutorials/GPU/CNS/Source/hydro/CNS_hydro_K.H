@@ -183,7 +183,12 @@ T WENOZ(std::array<T, 5> const &WENOVAR) {
         };
 
         if(std::isnan(alpha_sum)) {
-          printf("NaN in result \n");
+          printf("NaN in alpha sum \n");
+          amrex::Abort(); 
+        }
+
+        if(alpha_sum == 0) {
+          printf("alpha sum is zero \n");
           amrex::Abort(); 
         }
 
