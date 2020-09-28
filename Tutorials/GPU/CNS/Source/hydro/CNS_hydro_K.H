@@ -233,13 +233,13 @@ cns_wenoz_x (int i, int j, int k,
 
        dqR(i,j,k, nn) = WENOZ<false,Real>(WENOVAR);
        dqL(i+1,j,k, nn) = WENOZ<true,Real>(WENOVAR);
-/*
+
     if(std::isnan(dqR(i,j,k, nn)) || dqL(i+1,j,k, nn)) {
 //      printf("wenoz-x NaN in comp %d index %d,%d,%d \n", nn, i,j,k);
-      printf("wenoz-x NaN in comp %d index %d,%d,%d \n f: %f, %f, %f, %f, %f", nn, i,j,k, q(i-2,j,k,nn), q(i-1,j,k,nn), q(i-0,j,k,nn), q(i+1,j,k,nn), q(i+2,j,k,nn));
+      printf("wenoz-x NaN in comp %d index %d,%d,%d \n f: %f, %f, %f, %f, %f \n", nn, i,j,k, q(i-2,j,k,nn), q(i-1,j,k,nn), q(i-0,j,k,nn), q(i+1,j,k,nn), q(i+2,j,k,nn));
       amrex::Abort();
     }
-*/
+
     };
 }
 
