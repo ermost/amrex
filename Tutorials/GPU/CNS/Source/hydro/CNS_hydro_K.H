@@ -126,7 +126,7 @@ T WENOZ(std::array<T, 5> const &WENOVAR) {
         const T indicator[3]{(tau_5) / (beta[0] + epsL), (tau_5) / (beta[1] + epsL),
                              (tau_5) / (beta[2] + epsL)};
 
-        if(std::isnan(WENOVAR[minus2]) || std::isnan(WENOVAR[minus1]) || std::isnan(WENOVAR[plus0] || std::isnan(WENOVAR[plus1] || std::isnan(WENOVAR[plus2])) {
+        if(std::isnan(WENOVAR[minus2]) || std::isnan(WENOVAR[minus1]) || std::isnan(WENOVAR[plus0]) || std::isnan(WENOVAR[plus1]) || std::isnan(WENOVAR[plus2])) {
           printf("NaN in WENOVAR");
           amrex::Abort(); 
         }
