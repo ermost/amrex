@@ -142,13 +142,19 @@
 #define AMREX_FALLTHROUGH [[fallthrough]]
 #elif defined(__clang__)
 #define AMREX_FALLTHROUGH [[clang::fallthrough]]
-#elif defined(__GNUC__) && (__GNUC__ >= 7)
+#elif defined(__GNUC__) && (__GNUC__ >= 7) && !defined(__INTEL_COMPILER)
 #define AMREX_FALLTHROUGH [[gnu::fallthrough]]
 #else
 #define AMREX_FALLTHROUGH ((void)0)
 #endif
 
-
 #endif /* !BL_LANG_FORT */
 
 #endif
+
+/*
+ * DPCPP version strings
+ * beta08 #define __SYCL_COMPILER_VERSION 20200715
+ * beta09 #define __SYCL_COMPILER_VERSION 20200827
+ * beta10 #define __SYCL_COMPILER_VERSION 20201005
+*/

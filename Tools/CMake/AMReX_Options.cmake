@@ -129,10 +129,24 @@ cmake_dependent_option( ENABLE_CUDA "Enable GPU support via CUDA" OFF
    "NOT ENABLE_DPCPP" OFF)
 print_option( ENABLE_CUDA )
 
+cmake_dependent_option( ENABLE_HIP "Enable GPU support via HIP" OFF
+   "NOT ENABLE_DPCPP;NOT ENABLE_CUDA" OFF)
+print_option( ENABLE_HIP )
+
+# HIP-specific options
+if (ENABLE_HIP)
+   set(AMD_ARCH "IGNORE" CACHE STRING
+      "AMD GPU architecture (Must be provided if ENABLE_HIP=ON)")
+   if (NOT AMD_ARCH)
+      message(FATAL_ERROR "\n Must specify AMD_ARCH if ENABLE_HIP=ON\n")
+   endif ()
+endif ()
+
+
 option( ENABLE_ACC  "Enable GPU support via OpenACC" OFF )
 print_option( ENABLE_ACC )
 
-if (ENABLE_CUDA OR ENABLE_ACC)
+if (ENABLE_CUDA OR ENABLE_ACC OR ENABLE_HIP)
    set(GPUS_PER_SOCKET "IGNORE" CACHE STRING "Number of GPUs per socket" )
    print_option(GPUS_PER_SOCKET)
 
@@ -144,7 +158,8 @@ endif ()
 #
 # AMReX components selection  ================================================
 #
-option( ENABLE_EB "Build EB Code" OFF )
+cmake_dependent_option( ENABLE_EB "Build with Embedded Boundary support" OFF
+   "NOT DIM EQUAL 1" OFF )
 print_option(ENABLE_EB)
 
 cmake_dependent_option( ENABLE_FORTRAN_INTERFACES "Build Fortran API" OFF
@@ -170,8 +185,8 @@ print_option( ENABLE_DP_PARTICLES )
 #
 
 # sensei
-option( ENABLE_SENSEI_INSITU "Enable SENSEI in situ infrastructure" OFF )
-print_option( ENABLE_SENSEI_INSITU )
+option( ENABLE_SENSEI "Enable SENSEI in situ infrastructure" OFF )
+print_option( ENABLE_SENSEI )
 
 # Conduit (requires CONDUIT_DIR)
 option( ENABLE_CONDUIT "Enable Conduit support" OFF )

@@ -113,14 +113,17 @@ AmrLevel::AmrLevel (Amr&            papa,
     state.resize(desc_lst.size());
 
 #ifdef AMREX_USE_EB
-    m_factory = makeEBFabFactory(geom, ba, dm,
-                                 {m_eb_basic_grow_cells,
-                                  m_eb_volume_grow_cells,
-                                  m_eb_full_grow_cells},
-                                 m_eb_support_level);
-#else
-    m_factory.reset(new FArrayBoxFactory());
+    if (EB2::TopIndexSpaceIfPresent()) {
+        m_factory = makeEBFabFactory(geom, ba, dm,
+                                     {m_eb_basic_grow_cells,
+                                      m_eb_volume_grow_cells,
+                                      m_eb_full_grow_cells},
+                                     m_eb_support_level);
+    } else
 #endif
+    {
+        m_factory.reset(new FArrayBoxFactory());
+    }
 
     // Note that this creates a distribution map associated with grids.
     for (int i = 0; i < state.size(); i++)
@@ -157,7 +160,9 @@ AmrLevel::writePlotFile (const std::string& dir,
 
     int n_data_items = plot_names.size();
 #ifdef AMREX_USE_EB
-    n_data_items += 1;
+    if (EB2::TopIndexSpaceIfPresent()) {
+        n_data_items += 1;
+    }
 #endif
 
     // get the time from the first State_Type
@@ -187,7 +192,9 @@ AmrLevel::writePlotFile (const std::string& dir,
         }
 
 #ifdef AMREX_USE_EB
-        os << "vfrac\n";
+        if (EB2::TopIndexSpaceIfPresent()) {
+            os << "vfrac\n";
+        }
 #endif
 
         os << AMREX_SPACEDIM << '\n';
@@ -272,48 +279,52 @@ AmrLevel::writePlotFile (const std::string& dir,
         }
 
 #ifdef AMREX_USE_EB
-        // volfrac threshhold for amrvis
-        if (level == parent->finestLevel()) {
-            for (int lev = 0; lev <= parent->finestLevel(); ++lev) {
-                os << "1.0e-6\n";
+        if (EB2::TopIndexSpaceIfPresent()) {
+            // volfrac threshhold for amrvis
+            if (level == parent->finestLevel()) {
+                for (int lev = 0; lev <= parent->finestLevel(); ++lev) {
+                    os << "1.0e-6\n";
+                }
             }
         }
 #endif
     }
     //
-//   // We combine all of the multifabs -- state, derived, etc -- into one
-//   // multifab -- plotMF.
-//   int       cnt   = 0;
-//   const int nGrow = 0;
-//   MultiFab  plotMF(grids,dmap,n_data_items,nGrow,MFInfo(),Factory());
-//   MultiFab* this_dat = 0;
-//   //
-//   // Cull data from state variables -- use no ghost cells.
-//   //
-//   for (i = 0; i < static_cast<int>(plot_var_map.size()); i++)
-//   {
-//       int typ  = plot_var_map[i].first;
-//       int comp = plot_var_map[i].second;
-//       this_dat = &state[typ].newData();
-//       MultiFab::Copy(plotMF,*this_dat,comp,cnt,1,nGrow);
-//       cnt++;
-//   }
-//
-//   // derived
-//   if (derive_names.size() > 0)
-//   {
-//       for (auto const& dname : derive_names)
-//       {
-//           derive(dname, cur_time, plotMF, cnt);
-//           cnt++;
-//       }
-//   }
-//
-//#ifdef AMREX_USE_EB
-//    plotMF.setVal(0.0, cnt, 1, nGrow);
-//    auto factory = static_cast<EBFArrayBoxFactory*>(m_factory.get());
-//    MultiFab::Copy(plotMF,factory->getVolFrac(),0,cnt,1,nGrow);
-//#endif
+    // We combine all of the multifabs -- state, derived, etc -- into one
+    // multifab -- plotMF.
+    int       cnt   = 0;
+    const int nGrow = 0;
+    MultiFab  plotMF(grids,dmap,n_data_items,nGrow,MFInfo(),Factory());
+    MultiFab* this_dat = 0;
+    //
+    // Cull data from state variables -- use no ghost cells.
+    //
+    for (i = 0; i < static_cast<int>(plot_var_map.size()); i++)
+    {
+	int typ  = plot_var_map[i].first;
+	int comp = plot_var_map[i].second;
+	this_dat = &state[typ].newData();
+	MultiFab::Copy(plotMF,*this_dat,comp,cnt,1,nGrow);
+	cnt++;
+    }
+
+    // derived
+    if (derive_names.size() > 0)
+    {
+	for (auto const& dname : derive_names)
+	{
+            derive(dname, cur_time, plotMF, cnt);
+	    cnt++;
+	}
+    }
+
+#ifdef AMREX_USE_EB
+    if (EB2::TopIndexSpaceIfPresent()) {
+        plotMF.setVal(0.0, cnt, 1, nGrow);
+        auto factory = static_cast<EBFArrayBoxFactory*>(m_factory.get());
+        MultiFab::Copy(plotMF,factory->getVolFrac(),0,cnt,1,nGrow);
+    }
+#endif
 
     //
     // Use the Full pathname when naming the MultiFab.
@@ -589,12 +600,17 @@ AmrLevel::restart (Amr&          papa,
     parent->SetDistributionMap(level, dmap);
 
 #ifdef AMREX_USE_EB
-    m_factory = makeEBFabFactory(geom, grids, dmap,
-                                 {m_eb_basic_grow_cells, m_eb_volume_grow_cells, m_eb_full_grow_cells},
-                                 m_eb_support_level);
-#else
-    m_factory.reset(new FArrayBoxFactory());
+    if (EB2::TopIndexSpaceIfPresent()) {
+        m_factory = makeEBFabFactory(geom, grids, dmap,
+                                     {m_eb_basic_grow_cells,
+                                      m_eb_volume_grow_cells,
+                                      m_eb_full_grow_cells},
+                                     m_eb_support_level);
+    } else
 #endif
+    {
+        m_factory.reset(new FArrayBoxFactory());
+    }
 
     state.resize(ndesc);
     for (int i = 0; i < ndesc; ++i)
@@ -1340,7 +1356,9 @@ FillPatchIterator::Initialize (int  boxGrow,
 	    } else {
 
 #ifdef AMREX_USE_EB
-                amrex::Abort("Grids must be properly nested for EB");
+                if (EB2::TopIndexSpaceIfPresent()) {
+                    amrex::Abort("Grids must be properly nested for EB");
+                }
 #endif
 
 		static bool first = true;
@@ -1874,12 +1892,16 @@ AmrLevel::FillCoarsePatch (MultiFab& mf,
             crseBA.set(j,mapper->CoarseBox(bx, crse_ratio));
         }
 
+        MultiFab crseMF;
 #ifdef AMREX_USE_EB
-        auto cfactory = makeEBFabFactory(cgeom, crseBA, mf_DM, {0,0,0}, EBSupport::basic);
-        MultiFab crseMF(crseBA,mf_DM,NComp,0,MFInfo(),*cfactory);
-#else
-	MultiFab crseMF(crseBA,mf_DM,NComp,0);
+        if (EB2::TopIndexSpaceIfPresent()) {
+            auto cfactory = makeEBFabFactory(cgeom, crseBA, mf_DM, {0,0,0}, EBSupport::basic);
+            crseMF.define(crseBA,mf_DM,NComp,0,MFInfo(),*cfactory);
+        } else
 #endif
+        {
+            crseMF.define(crseBA,mf_DM,NComp,0);
+        }
 
 	if ( level == 1 
 	     || amrex::ProperlyNested(crse_ratio, parent->blockingFactor(level),

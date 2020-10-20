@@ -148,15 +148,11 @@ amrex::write_to_stderr_without_buffering (const char* str)
     }
 }
 
+#if !AMREX_DEVICE_COMPILE
 namespace {
-//  Having both host and device versions to avoid compiler warning
-AMREX_GPU_HOST_DEVICE
 void
 write_lib_id(const char* msg)
 {
-#if AMREX_DEVICE_COMPILE
-    amrex::ignore_unused(msg);
-#else
     fflush(0);
     const char* const s = "amrex::";
     fwrite(s, strlen(s), 1, stderr);
@@ -165,9 +161,9 @@ write_lib_id(const char* msg)
 	fwrite(msg, strlen(msg), 1, stderr);
 	fwrite("::", 2, 1, stderr);
     }
+}
+}
 #endif
-}
-}
 
 void
 amrex::Error (const std::string& msg)
@@ -522,7 +518,7 @@ amrex::Initialize (int& argc, char**& argv, bool build_parm_parse,
     BL_PROFILE_INITPARAMS();
 #endif
     machine::Initialize();
-#ifdef AMREX_USE_CUDA
+#ifdef AMREX_USE_GPU
     Gpu::Fuser::Initialize();
 #endif
 
