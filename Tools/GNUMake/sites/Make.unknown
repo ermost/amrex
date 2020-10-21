@@ -89,7 +89,7 @@ ifeq ($(USE_MPI),TRUE)
       LIBRARIES += $(mpif90_link_flags)
 #    endif
 
-  else ifneq ($(findstring /intel/mpi-rt,$(shell $(MPI_OTHER_COMP) -show 2>&1)),)
+  else ifneq ($(findstring /mpi/intel,$(shell $(MPI_OTHER_COMP) -show 2>&1)),)
 
     #
     # Intel mpi
