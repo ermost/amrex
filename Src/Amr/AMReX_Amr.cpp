@@ -1804,7 +1804,7 @@ Amr::checkPoint ()
                              stream_max_tries);
 
   // For AsyncOut, we need to turn off stream retry and write to ckfile directly.
-  output_name = (AsyncOut::UseAsyncOut()) ? ckfile : (ckfile + ".temp");
+  const std::string ckfileTemp = (AsyncOut::UseAsyncOut()) ? ckfile : (ckfile + ".temp");
 
   while(sretry.TryFileOutput()) {
 
@@ -1820,22 +1820,24 @@ Amr::checkPoint ()
 
     if (precreateDirectories) {    // ---- make all directories at once
       amrex::UtilRenameDirectoryToOld(ckfile, false);      // dont call barrier
-      amrex::UtilCreateCleanDirectory(output_name, false);  // dont call barrier
+      amrex::UtilCreateCleanDirectory(ckfileTemp, false);  // dont call barrier
       for (int i(0); i <= finest_level; ++i) 
       {
-        amr_level[i]->CreateLevelDirectory(output_name);
+        amr_level[i]->CreateLevelDirectory(ckfileTemp);
       }
       ParallelDescriptor::Barrier("Amr::precreateDirectories");
     } else {
       amrex::UtilRenameDirectoryToOld(ckfile, false);     // dont call barrier
-      amrex::UtilCreateCleanDirectory(output_name, true);  // call barrier
+      amrex::UtilCreateCleanDirectory(ckfileTemp, true);  // call barrier
     }
 
-    std::string HeaderFileName = output_name + "/Header";
+    std::string HeaderFileName = ckfileTemp + "/Header";
 
     VisMF::IO_Buffer io_buffer(VisMF::GetIOBufferSize());
 
-    output_stream.rdbuf()->pubsetbuf(io_buffer.dataPtr(), io_buffer.size());
+    std::ofstream HeaderFile;
+
+    HeaderFile.rdbuf()->pubsetbuf(io_buffer.dataPtr(), io_buffer.size());
 
     int old_prec = 0;
 
@@ -1844,16 +1846,16 @@ Amr::checkPoint ()
         //
         // Only the IOProcessor() writes to the header file.
         //
-        output_stream.open(HeaderFileName.c_str(), std::ios::out | std::ios::trunc |
+        HeaderFile.open(HeaderFileName.c_str(), std::ios::out | std::ios::trunc |
 	                                        std::ios::binary);
 
-        if ( ! output_stream.good()) {
+        if ( ! HeaderFile.good()) {
             amrex::FileOpenFailed(HeaderFileName);
 	}
 
-	old_prec = output_stream.precision(17);
+        old_prec = HeaderFile.precision(17);
 
-        output_stream << CheckPointVersion << '\n'
+        HeaderFile << CheckPointVersion << '\n'
                    << AMREX_SPACEDIM       << '\n'
                    << cumtime           << '\n'
                    << max_level         << '\n'
@@ -1861,38 +1863,38 @@ Amr::checkPoint ()
         //
         // Write out problem domain.
         //
-        for (int i(0); i <= max_level; ++i) { output_stream << Geom(i)        << ' '; }
-        output_stream << '\n';
-        for (int i(0); i < max_level; ++i)  { output_stream << ref_ratio[i]   << ' '; }
-        output_stream << '\n';
-        for (int i(0); i <= max_level; ++i) { output_stream << dt_level[i]    << ' '; }
-        output_stream << '\n';
-        for (int i(0); i <= max_level; ++i) { output_stream << dt_min[i]      << ' '; }
-        output_stream << '\n';
-        for (int i(0); i <= max_level; ++i) { output_stream << n_cycle[i]     << ' '; }
-        output_stream << '\n';
-        for (int i(0); i <= max_level; ++i) { output_stream << level_steps[i] << ' '; }
-        output_stream << '\n';
-        for (int i(0); i <= max_level; ++i) { output_stream << level_count[i] << ' '; }
-        output_stream << '\n';
+        for (int i(0); i <= max_level; ++i) { HeaderFile << Geom(i)        << ' '; }
+        HeaderFile << '\n';
+        for (int i(0); i < max_level; ++i)  { HeaderFile << ref_ratio[i]   << ' '; }
+        HeaderFile << '\n';
+        for (int i(0); i <= max_level; ++i) { HeaderFile << dt_level[i]    << ' '; }
+        HeaderFile << '\n';
+        for (int i(0); i <= max_level; ++i) { HeaderFile << dt_min[i]      << ' '; }
+        HeaderFile << '\n';
+        for (int i(0); i <= max_level; ++i) { HeaderFile << n_cycle[i]     << ' '; }
+        HeaderFile << '\n';
+        for (int i(0); i <= max_level; ++i) { HeaderFile << level_steps[i] << ' '; }
+        HeaderFile << '\n';
+        for (int i(0); i <= max_level; ++i) { HeaderFile << level_count[i] << ' '; }
+        HeaderFile << '\n';
     }
 
     for (int i = 0; i <= finest_level; ++i) {
-        amr_level[i]->checkPointPre(output_name, output_stream);
+        amr_level[i]->checkPointPre(ckfileTemp, HeaderFile);
     }
 
     for (int i = 0; i <= finest_level; ++i) {
-        amr_level[i]->checkPoint(output_name, output_stream);
+        amr_level[i]->checkPoint(ckfileTemp, HeaderFile);
     }
 
     for (int i = 0; i <= finest_level; ++i) {
-        amr_level[i]->checkPointPost(output_name, output_stream);
+        amr_level[i]->checkPointPost(ckfileTemp, HeaderFile);
     }
 
     if (ParallelDescriptor::IOProcessor()) {
 	const Vector<std::string> &FAHeaderNames = StateData::FabArrayHeaderNames();
 	if(FAHeaderNames.size() > 0) {
-          std::string FAHeaderFilesName = output_name + "/FabArrayHeaders.txt";
+          std::string FAHeaderFilesName = ckfileTemp + "/FabArrayHeaders.txt";
           std::ofstream FAHeaderFile(FAHeaderFilesName.c_str(),
 	                             std::ios::out | std::ios::trunc |
 	                             std::ios::binary);
@@ -1907,14 +1909,12 @@ Amr::checkPoint ()
     }
 
     if(ParallelDescriptor::IOProcessor()) {
-        output_stream.precision(old_prec);
+        HeaderFile.precision(old_prec);
 
-        if( ! output_stream.good()) {
+        if( ! HeaderFile.good()) {
             amrex::Error("Amr::checkpoint() failed");
 	}
     }
-
-    output_stream.close();
 
     last_checkpoint = level_steps[0];
 
@@ -1933,7 +1933,7 @@ Amr::checkPoint ()
     } else {
         ParallelDescriptor::Barrier("Amr::checkPoint::end");
         if(ParallelDescriptor::IOProcessor()) {
-            std::rename(output_name.c_str(), ckfile.c_str());
+            std::rename(ckfileTemp.c_str(), ckfile.c_str());
         }
         ParallelDescriptor::Barrier("Renaming temporary checkPoint file.");
     }

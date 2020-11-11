@@ -289,42 +289,7 @@ AmrLevel::writePlotFile (const std::string& dir,
         }
 #endif
     }
-    //
-    // We combine all of the multifabs -- state, derived, etc -- into one
-    // multifab -- plotMF.
-    int       cnt   = 0;
-    const int nGrow = 0;
-    MultiFab  plotMF(grids,dmap,n_data_items,nGrow,MFInfo(),Factory());
-    MultiFab* this_dat = 0;
-    //
-    // Cull data from state variables -- use no ghost cells.
-    //
-    for (i = 0; i < static_cast<int>(plot_var_map.size()); i++)
-    {
-	int typ  = plot_var_map[i].first;
-	int comp = plot_var_map[i].second;
-	this_dat = &state[typ].newData();
-	MultiFab::Copy(plotMF,*this_dat,comp,cnt,1,nGrow);
-	cnt++;
-    }
 
-    // derived
-    if (derive_names.size() > 0)
-    {
-	for (auto const& dname : derive_names)
-	{
-            derive(dname, cur_time, plotMF, cnt);
-	    cnt++;
-	}
-    }
-
-#ifdef AMREX_USE_EB
-    if (EB2::TopIndexSpaceIfPresent()) {
-        plotMF.setVal(0.0, cnt, 1, nGrow);
-        auto factory = static_cast<EBFArrayBoxFactory*>(m_factory.get());
-        MultiFab::Copy(plotMF,factory->getVolFrac(),0,cnt,1,nGrow);
-    }
-#endif
 
     //
     // Use the Full pathname when naming the MultiFab.
@@ -387,6 +352,14 @@ AmrLevel::getPlotData(MultiFab&                 plot_data,
     }
     cnt++;
   }
+
+#ifdef AMREX_USE_EB
+    if (EB2::TopIndexSpaceIfPresent()) {
+        plotMF.setVal(0.0, cnt, 1, nGrow);
+        auto factory = static_cast<EBFArrayBoxFactory*>(m_factory.get());
+        MultiFab::Copy(plotMF,factory->getVolFrac(),0,cnt,1,nGrow);
+    }
+#endif
 
   // derived
   Real cur_time = state[0].curTime();
