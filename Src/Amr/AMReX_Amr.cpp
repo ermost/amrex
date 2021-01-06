@@ -65,6 +65,7 @@ bool                   Amr::first_plotfile;
 bool                   Amr::first_smallplotfile;
 Vector<BoxArray>       Amr::initial_ba;
 Vector<BoxArray>       Amr::regrid_ba;
+int                    Amr::compute_new_dt_on_regrid;
 #ifdef BL_USE_SENSEI_INSITU
 AmrInSituBridge*       Amr::insitu_bridge;
 #endif
@@ -74,11 +75,7 @@ namespace
     const std::string CheckPointVersion("CheckPointVersion_1.0");
 
     bool initialized = false;
-}
 
-//Tan Nov 24, 2017 : I removed this anonymous namespace so I could access the inner variables from other source files 
-//namespace   
-//{
     //
     // These are all ParmParse'd in.  Set defaults in Initialize()!!!
     //
@@ -93,12 +90,11 @@ namespace
     int  insitu_on_restart;
     int  checkpoint_on_restart;
     bool checkpoint_files_output;
-    int  compute_new_dt_on_regrid;
     bool precreateDirectories;
     bool prereadFAHeaders;
     VisMF::Header::Version plot_headerversion(VisMF::Header::Version_v1);
     VisMF::Header::Version checkpoint_headerversion(VisMF::Header::Version_v1);
-//}
+}
 
 
 
@@ -337,7 +333,13 @@ Amr::InitAmr ()
     //
     for (int i = 0; i < nlev; i++)
     {
-        dt_level[i]    = 1.e200; // Something nonzero so old & new will differ
+        
+        // Something nonzero so old & new will differ
+#ifdef AMREX_USE_FLOAT
+        dt_level[i]    = 1.e30f;
+#else
+        dt_level[i]    = 1.e200;
+#endif
         level_steps[i] = 0;
         level_count[i] = 0;
         n_cycle[i]     = 0;
@@ -1135,7 +1137,7 @@ Amr::checkInput ()
     //
     for (int i = 0; i < max_level; i++)
     {
-        if (MaxRefRatio(i) < 2 || MaxRefRatio(i) > 12)
+        if (MaxRefRatio(i) < 2)
             amrex::Error("Amr::checkInput: bad ref_ratios");
     }
     const Box& domain = Geom(0).Domain();
@@ -2982,6 +2984,8 @@ Amr::regrid (int  lbase,
         {
             a->init();
             amr_level[lev].reset(a);
+            if (lev > 0)
+                level_steps[lev] = level_steps[lev-1] * n_cycle[lev-1];
 	    this->SetBoxArray(lev, amr_level[lev]->boxArray());
 	    this->SetDistributionMap(lev, amr_level[lev]->DistributionMap());
         }
@@ -3617,7 +3621,11 @@ Amr::computeOptimalSubcycling(int n, int* best, Real* dt_max, Real* est_work, in
     // internally these represent the total number of steps at a level, 
     // not the number of cycles
     std::vector<int> cycles(n);
+#ifdef AMREX_USE_FLOAT
+    Real best_ratio = 1e30f;
+#else
     Real best_ratio = 1e200;
+#endif
     Real best_dt = 0;
     Real ratio;
     Real dt;

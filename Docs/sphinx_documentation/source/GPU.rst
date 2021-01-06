@@ -13,8 +13,7 @@ AMReX's GPU strategy focuses on providing performant GPU support
 with minimal changes and maximum flexibility.  This allows
 application teams to get running on GPUs quickly while allowing
 long term performance tuning and programming model selection.  AMReX
-uses CUDA for GPUs, but application teams can use CUDA, CUDA
-Fortran, OpenACC or OpenMP in their individual codes.
+uses CUDA for GPUs, but application teams can use CUDA,  OpenACC or OpenMP in their individual codes.
 
 When running AMReX on a CPU system, the parallelization strategy is a
 combination of MPI and OpenMP using tiling, as detailed in
@@ -131,10 +130,7 @@ Building with GNU Make
 To build AMReX with GPU support, add ``USE_CUDA=TRUE`` to the
 ``GNUmakefile`` or as a command line argument.
 
-Only IBM and PGI support CUDA Fortran, which is also built when
-``USE_CUDA=TRUE``.
-
-AMReX does not require OpenACC or CUDA Fortran, but application codes
+AMReX does not require OpenACC, but application codes
 can use them if they are supported by the compiler.  For OpenACC support, add
 ``USE_ACC=TRUE``.  PGI, Cray and GNU compilers support OpenACC.  Thus,
 for OpenACC, you must use ``COMP=pgi``, ``COMP=cray`` or ``COMP=gnu``.
@@ -186,7 +182,7 @@ Building with CMake
 Enabling CUDA support
 ^^^^^^^^^^^^^^^^^^^^^
 
-To build AMReX with CUDA support in CMake, add ``-DENABLE_CUDA=YES`` to the
+To build AMReX with CUDA support in CMake, add ``-DAMReX_GPU_BACKEND=CUDA`` to the
 ``cmake`` invocation. For a full list of CUDA-specific configuration options,
 check the :ref:`table <tab:cmakecudavar>` below.
 
@@ -201,40 +197,44 @@ check the :ref:`table <tab:cmakecudavar>` below.
    +------------------------------+-------------------------------------------------+-------------+-----------------+
    | Variable Name                | Description                                     | Default     | Possible values |
    +==============================+=================================================+=============+=================+
-   | ENABLE_CUDA                  |  Build with CUDA support                        | NO          | YES, NO         |
+   | AMReX_CUDA_ARCH              |  CUDA target architecture                       | Auto        | User-defined    |
    +------------------------------+-------------------------------------------------+-------------+-----------------+
-   | CUDA_ARCH                    |  CUDA target architecture                       | Auto        | User-defined    |
+   | AMReX_CUDA_FASTMATH          |  Enable CUDA fastmath library                   | YES         | YES, NO         |
    +------------------------------+-------------------------------------------------+-------------+-----------------+
-   | CUDA_BACKTRACE               |  Host function symbol names (e.g. cuda-memcheck)| Auto        | YES, NO         |
+   | AMReX_CUDA_BACKTRACE         |  Host function symbol names (e.g. cuda-memcheck)| Auto        | YES, NO         |
    +------------------------------+-------------------------------------------------+-------------+-----------------+
-   | CUDA_COMPILATION_TIMER       |  CSV table with time for each compilation phase | NO          | YES, NO         |
+   | AMReX_CUDA_COMPILATION_TIMER |  CSV table with time for each compilation phase | NO          | YES, NO         |
    +------------------------------+-------------------------------------------------+-------------+-----------------+
-   | CUDA_DEBUG                   |  Device debug information (optimizations: off)  | NO          | YES, NO         |
+   | AMReX_CUDA_DEBUG             |  Device debug information (optimizations: off)  | NO          | YES, NO         |
    +------------------------------+-------------------------------------------------+-------------+-----------------+
-   | CUDA_ERROR_CAPTURE_THIS      |  Error if a CUDA lambda captures a class' this  | NO          | YES, NO         |
+   | AMReX_CUDA_ERROR_CAPTURE_THIS|  Error if a CUDA lambda captures a class' this  | NO          | YES, NO         |
    +------------------------------+-------------------------------------------------+-------------+-----------------+
-   | CUDA_KEEP_FILES              |  Keep intermediately files (folder: nvcc_tmp)   | NO          | YES, NO         |
+   | AMReX_CUDA_ERROR_CROSS       |  Error if a host function is called from a host | NO          | YES, NO         |
+   |  _EXECUTION_SPACE_CALL       |   device function                               |             |                 |
    +------------------------------+-------------------------------------------------+-------------+-----------------+
-   | CUDA_LTO                     |  Enable CUDA link-time-optimization             | NO          | YES, NO         |
+   | AMReX_CUDA_KEEP_FILES        |  Keep intermediately files (folder: nvcc_tmp)   | NO          | YES, NO         |
    +------------------------------+-------------------------------------------------+-------------+-----------------+
-   | CUDA_MAX_THREADS             |  Max number of CUDA threads per block           | 256         | User-defined    |
+   | AMReX_CUDA_LTO               |  Enable CUDA link-time-optimization             | NO          | YES, NO         |
    +------------------------------+-------------------------------------------------+-------------+-----------------+
-   | CUDA_MAXREGCOUNT             |  Limits the number of CUDA registers available  | 255         | User-defined    |
+   | AMReX_CUDA_MAX_THREADS       |  Max number of CUDA threads per block           | 256         | User-defined    |
    +------------------------------+-------------------------------------------------+-------------+-----------------+
-   | CUDA_PTX_VERBOSE             |  Verbose code generation statistics in ptxas    | NO          | YES, NO         |
+   | AMReX_CUDA_MAXREGCOUNT       |  Limits the number of CUDA registers available  | 255         | User-defined    |
    +------------------------------+-------------------------------------------------+-------------+-----------------+
-   | CUDA_SHOW_CODELINES          |  Source information in PTX (optimizations: on)  | Auto        | YES, NO         |
+   | AMReX_CUDA_PTX_VERBOSE       |  Verbose code generation statistics in ptxas    | NO          | YES, NO         |
    +------------------------------+-------------------------------------------------+-------------+-----------------+
-   | CUDA_SHOW_LINENUMBERS        |  Line-number information (optimizations: on)    | Auto        | YES, NO         |
+   | AMReX_CUDA_SHOW_CODELINES    |  Source information in PTX (optimizations: on)  | Auto        | YES, NO         |
    +------------------------------+-------------------------------------------------+-------------+-----------------+
-   | CUDA_WARN_CAPTURE_THIS       |  Warn if a CUDA lambda captures a class' this   | YES         | YES, NO         |
+   | AMReX_CUDA_SHOW_LINENUMBERS  |  Line-number information (optimizations: on)    | Auto        | YES, NO         |
+   +------------------------------+-------------------------------------------------+-------------+-----------------+
+   | AMReX_CUDA_WARN_CAPTURE_THIS |  Warn if a CUDA lambda captures a class' this   | YES         | YES, NO         |
    +------------------------------+-------------------------------------------------+-------------+-----------------+
 .. raw:: latex
 
    \end{center}
 
+
 The target architecture to build for can be specified via the configuration option
-``-DCUDA_ARCH=<target-architecture>``, where ``<target-architecture>`` can be either
+``-DAMReX_CUDA_ARCH=<target-architecture>``, where ``<target-architecture>`` can be either
 the name of the NVIDIA GPU generation, i.e. ``Turing``, ``Volta``, ``Ampere``, ``...`` , or its
 `compute capability <https://developer.nvidia.com/cuda-gpus>`_, i.e. ``10.0``, ``9.0``,  ``...`` .
 For example, on Cori GPUs you can specify the architecture as follows:
@@ -243,12 +243,13 @@ For example, on Cori GPUs you can specify the architecture as follows:
 
 ::
 
-   cmake [options] -DENABLE_CUDA=yes -DCUDA_ARCH=Volta /path/to/amrex/source
+   cmake [options] -DAMReX_GPU_BACKEND=CUDA -DAMReX_CUDA_ARCH=Volta /path/to/amrex/source
 
 
-If no architecture is specified, CMake will try to determine which GPU architecture is
-supported by the system.
-If more than one is found, CMake will build for all of them.
+If no architecture is specified, CMake will default to the architecture defined in the
+*environment variable* ``AMREX_CUDA_ARCH`` (note: all caps).
+If the latter is not defined, CMake will try to determine which GPU
+architecture is supported by the system. If more than one is found, CMake will build for all of them.
 This will generally results in a larger library and longer build times.
 If autodetection fails, a set of "common" architectures is assumed.
 **Note that AMReX supports NVIDIA GPU architectures with compute capability 6.0 or higher and
@@ -308,10 +309,8 @@ Enabling HIP support (experimental)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 To build AMReX with HIP support in CMake, add
-``-DENABLE_HIP=YES -DAMD_ARCH=<target-arch> -DCMAKE_CXX_COMPILER=<your-hip-compiler>`` to the
-``cmake`` invocation. For a full list of HIP-specific configuration options,
-check the :ref:`table <tab:cmakehipvar>` below.
-
+``-DAMReX_GPU_BACKEND=HIP -DAMReX_AMD_ARCH=<target-arch> -DCMAKE_CXX_COMPILER=<your-hip-compiler>``
+to the ``cmake`` invocation.
 
 In AMReX CMake, the HIP compiler is treated as a special C++ compiler and therefore
 the standard CMake variables used to customize the compilation process for C++,
@@ -320,35 +319,64 @@ for example ``CMAKE_CXX_FLAGS``, can be used for HIP as well.
 
 Since CMake does not support autodetection of HIP compilers/target architectures
 yet, ``CMAKE_CXX_COMPILER`` must be set to a valid HIP compiler, i.e. ``hipcc`` or ``nvcc``,
-and ``AMD_ARCH`` to the target architecture you are building for.
-Thus **``AMD_ARCH`` and ``CMAKE_CXX_COMPILER`` are required user-inputs when ``ENABLE_HIP=ON``**.
+and ``AMReX_AMD_ARCH`` to the target architecture you are building for.
+Thus **AMReX_AMD_ARCH and CMAKE_CXX_COMPILER are required user-inputs when AMReX_GPU_BACKEND=HIP**.
 Below is an example configuration for HIP on Tulip:
 
 .. highlight:: console
 
 ::
 
-   cmake -DENABLE_HIP=ON -DCMAKE_CXX_COMPILER=$(which hipcc) -DAMD_ARCH="gfx906,gfx908"  [other options] /path/to/amrex/source
+   cmake -DAMReX_GPU_BACKEND=HIP -DCMAKE_CXX_COMPILER=$(which hipcc) -DAMReX_AMD_ARCH="gfx906,gfx908"  [other options] /path/to/amrex/source
+
+
+Enabling SYCL support (experimental)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To build AMReX with SYCL support in CMake, add
+``-DAMReX_GPU_BACKEND=SYCL -DCMAKE_CXX_COMPILER=<your-sycl-compiler>``
+to the ``cmake`` invocation.
+For a full list of SYCL-specific configuration options,
+check the :ref:`table <tab:cmakesyclvar>` below.
+
+
+In AMReX CMake, the SYCL compiler is treated as a special C++ compiler and therefore
+the standard CMake variables used to customize the compilation process for C++,
+for example ``CMAKE_CXX_FLAGS``, can be used for DPCPP as well.
+
+
+Since CMake does not support autodetection of SYCL compilers yet,
+``CMAKE_CXX_COMPILER`` must be set to a valid SYCL compiler. i.e. ``dpcpp``.
+Thus **CMAKE_CXX_COMPILER is a required user-input when AMReX_GPU_BACKEND=SYCL**.
+At this time, **the only supported SYCL compiler is dpcpp**.
+Below is an example configuration for SYCL:
+
+.. highlight:: console
+
+::
+
+   cmake -DAMReX_GPU_BACKEND=SYCL -DCMAKE_CXX_COMPILER=$(which dpcpp)  [other options] /path/to/amrex/source
+
 
 .. raw:: latex
 
    \begin{center}
 
-.. _tab:cmakehipvar:
+.. _tab:cmakesyclvar:
 
-.. table:: AMReX HIP-specific build options
+.. table:: AMReX SYCL-specific build options
 
    +------------------------------+-------------------------------------------------+-------------+-----------------+
    | Variable Name                | Description                                     | Default     | Possible values |
    +==============================+=================================================+=============+=================+
-   | ENABLE_HIP                   |  Build with HIP support                         | NO          | YES, NO         |
+   | AMReX_DPCPP_AOT              | Enable DPCPP ahead-of-time compilation          | NO          | YES, NO         |
    +------------------------------+-------------------------------------------------+-------------+-----------------+
-   | AMD_ARCH                     |  AMD  target architecture  (required)           |             | User-defined    |
+   | AMReX_DPCPP_SPLIT_KERNEL     | Enable DPCPP kernel splitting                   | YES         | YES, NO         |
    +------------------------------+-------------------------------------------------+-------------+-----------------+
-
 .. raw:: latex
 
    \end{center}
+
 
 
 .. ===================================================================
@@ -380,12 +408,7 @@ empty space.
 
 When AMReX is compiled with ``USE_CUDA=TRUE``, the preprocessor
 macros ``AMREX_USE_CUDA`` and ``AMREX_USE_GPU`` are defined for
-conditional programming.  For PGI and IBM compilers,
-``AMREX_USE_CUDA_FORTRAN`` is also defined, as well as
-``-DAMREX_CUDA_FORT_GLOBAL='attributes(global)'``,
-``-DAMREX_CUDA_FORT_DEVICE='attributes(device)'``, and
-``-DAMREX_CUDA_FORT_HOST='attributes(host)'`` so that CUDA Fortran
-functions can be properly labelled.  When AMReX is compiled with
+conditional programming.  When AMReX is compiled with
 ``USE_ACC=TRUE``, ``AMREX_USE_ACC`` is defined.  When AMReX is
 compiled with ``USE_OMP_OFFLOAD=TRUE``, ``AMREX_USE_OMP_OFFLOAD`` is
 defined.
@@ -779,7 +802,7 @@ Kernel Launch
 =============
 
 In this section, how to offload work to the GPU will be demonstrated.
-AMReX supports offloading work with CUDA, CUDA Fortran, OpenACC or OpenMP.
+AMReX supports offloading work with CUDA, OpenACC, or OpenMP.
 
 When using CUDA, AMReX provides users with portable C++ function calls or
 C++ macros that launch a user-defined lambda function.  When compiled without CUDA,
@@ -1202,6 +1225,8 @@ as:
         Real b;
     });
 
+One should also avoid using :cpp:`continue` and :cpp:`return` inside the macros
+because it is not an actual :cpp:`for` loop.
 Users that choose to implement the macro launches should be aware of the limitations
 of C++ preprocessing macros to ensure GPU offloading is done properly.
 

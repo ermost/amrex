@@ -977,7 +977,9 @@ FillPatchIterator::FillPatchIterator (AmrLevel& amrlevel,
     m_amrlevel(amrlevel),
     m_leveldata(leveldata),
     m_ncomp(0)
-{}
+{
+    MFIter::depth = 0;
+}
 
 FillPatchIteratorHelper::FillPatchIteratorHelper (AmrLevel&     amrlevel,
                                                   MultiFab&     leveldata,
@@ -1018,6 +1020,7 @@ FillPatchIterator::FillPatchIterator (AmrLevel& amrlevel,
     BL_ASSERT(AmrLevel::desc_lst[idx].inRange(scomp,ncomp));
     BL_ASSERT(0 <= idx && idx < AmrLevel::desc_lst.size());
 
+    MFIter::depth = 0;
     Initialize(boxGrow,time,idx,scomp,ncomp);
 
 #ifdef BL_USE_TEAM
