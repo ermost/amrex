@@ -81,8 +81,8 @@ ifeq ($(DEBUG),TRUE)
   CXXFLAGS += -g -O0 -ggdb -ftrapv
   CFLAGS   += -g -O0 -ggdb -ftrapv
 else
-  CXXFLAGS += -g -O3
-  CFLAGS   += -g -O3
+  CXXFLAGS += -g -O3 -march=native
+  CFLAGS   += -g -O3 -march=native
 endif
 
 ifeq ($(WARN_ALL),TRUE)
